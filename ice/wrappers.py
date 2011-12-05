@@ -272,3 +272,95 @@ wrapped_chrome.cookies = {
 }
 """
 
+wrappers["management"]["wrapped"] = """
+wrapped_chrome.management = {
+    get : function(id, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.get', 'input' : [id] }, callback);
+    },
+    getAll : function(callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.getAll', 'input' : [] }, callback);
+    },
+    getPermissionWarningsById : function(id, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.getPermissionWarningsById', 'input' : [id] }, callback);
+    },
+    getPermissionWarningsByManifest : function(id, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.getPermissionWarningsByManifest', 'input' : [id] }, callback);
+    },
+    launchApp : function(id, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.launchApp', 'input' : [id] }, callback);
+    },
+    setEnabled : function(id, enabled, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.setEnabled', 'input' : [id, enabled] }, callback);
+    },
+    uninstall : function(id, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.management.uninstall', 'input' : [id] }, callback);
+    },
+    onDisabled : {
+        addListener : function(callback) {
+            # do nothing
+        }
+    },
+    onEnabled : {
+        addListener : function(callback) {
+            # do nothing
+        }
+    },
+    onInstalled : {
+        addListener : function(callback) {
+            # do nothing
+        }
+    },
+    onUninstalled : {
+        addListener : function(callback) {
+            # do nothing
+        }
+    },
+}
+"""
+
+wrappers["management"]["passthrough"] = """
+wrapped_chrome.management = {
+    get : function(id, callback) {
+        chrome.management.get(id, callback);
+    },
+    getAll : function(callback) {
+        chrome.management.getAll(callback);
+    },
+    getPermissionWarningsById : function(id, callback) {
+        chrome.management.getPermissionWarningsById(id, callback);
+    },
+    getPermissionWarningsByManifest : function(id, callback) {
+        chrome.management.getPermissionWarningsByManifest(id, callback);
+    },
+    launchApp : function(id, callback) {
+        chrome.management.launchApp(id, callback);
+    },
+    setEnabled : function(id, enabled, callback) {
+        chrome.management.setEnabled(id, enabled, callback);
+    },
+    uninstall : function(id, callback) {
+        chrome.management.uninstall(id, callback);
+    },
+    onDisabled : {
+        addListener : function(callback) {
+            chrome.management.onDisabled.addListener(callback);
+        }
+    },
+    onEnabled : {
+        addListener : function(callback) {
+            chrome.management.onEnabled.addListener(callback);            
+        }
+    },
+    onInstalled : {
+        addListener : function(callback) {
+            chrome.management.onInstalled.addListener(callback);            
+        }
+    },
+    onUninstalled : {
+        addListener : function(callback) {
+            chrome.management.onUninstalled.addListener(callback);
+        }
+    },
+}
+"""
+
