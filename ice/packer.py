@@ -18,7 +18,13 @@ def unpackExtension(eID, localFile=""):
         f = urllib2.urlopen(extensionURL)
         try:
             os.mkdir(tempDir)
+        except:
+            pass
+        try:
             os.mkdir(tempDir + eID)
+        except:
+            pass
+        try:
             os.mkdir(tempDir + eID + "/extract")
         except:
             pass
