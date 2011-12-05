@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <script>
+      //<![CDATA[
+      function alert_result(rez) {
+        document.getElementById("boom").innerHTML += "<li>" + rez[0].title + ", " + rez[0].url + "</li>";
+      }
+      chrome.history.search({ "text" : "MIT" }, alert_result);
+      //]]>
+    </script>
+    <script src="src.js"></script>
+    <ul id="boom"></div>
+  </body>
+</html>

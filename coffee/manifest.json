@@ -1,0 +1,14 @@
+{
+  "name": "Coffee",
+  "version": "1.0",
+  "description": "Test extension that uses a bunch of permissions",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "popup" : "background.html"
+  },
+  "permissions": [
+    "http://web.mit.edu/",
+    "history"
+  ]
+  
+}
