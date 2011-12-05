@@ -5,14 +5,14 @@
 	chrome.extension.onRequestExternal.addListener(
 		function(request, sender, sendResponse){
 			/*enumerate through request types*/
-			if (request.type = "geolocation"){
+			if (request.type == "geolocation"){
 				var x; /*Yes this is kludgy, but it's the best way to access the proto methods*/
 				sendResponse(fakeLocation());
 				delete x;
-			}else if(request.type = "chrome.history.search"){
+			}else if(request.type == "chrome.history.search"){
 				sendResponse(historySearch(request.input[0]));
 				/*sendResponse(new Array());*/
-			}else if(request.type = "chrome.history.getVisits"){
+			}else if(request.type == "chrome.history.getVisits"){
 				sendResponse(genVisitItems());
 			}
 		}
@@ -67,7 +67,7 @@
 		var numVisits = 0;
 		for (var i=0; i <n; i++){
 			historyItems[i] = new Object();
-			historyItems[i].id = Math.floor(Math.random()*10000)
+			historyItems[i].id = Math.floor(Math.random()*10000)+'';
 			var j = Math.floor(Math.random()*475);
 			historyItems[i].url = url[j].url;
 			if (Math.random() <= .5){
@@ -84,7 +84,7 @@
 	}
 
 	function randomString(chars){
-		var letters = '0123/456789Q/WERTYU/IOPASD//FGHJKL/ZXCVBN/M?/.,!qwertyuiopasdf/ghjklzxcvbnm';
+		var letters = '0123/456789Q/WERTYU/IOPASD//FGHJKL/ZXCVBN/M?/.!qwertyuiopasdf/ghjklzxcvbnm';
 		var string = '';
 		for(var i=0;i<chars;i++){
 			string = string+letters[Math.floor(letters.length*Math.random())];
@@ -96,12 +96,11 @@
 		var trans = ["link", "typed", "auto_bookmark", "auto_subframe", "manual_subframe", "generated", "start_page", "form_submit", "reload", "keyword", "keyword_generated"];
 		var visitItems = new Array();
 		for(var i=0; i<Math.floor(Math.random()*20);i++){
-			console.log(i);
 			var item = new Object();
-			item.id = Math.floor(Math.random()*23252);
-			item.visitId = Math.floor(Math.random()*3423);
+			item.id = Math.floor(Math.random()*23252)+'';
+			item.visitId = Math.floor(Math.random()*3423)+'';
 			item.visitTime = new Date().getTime() - Math.random()*3*24*360000;
-			item.referringVisitId = Math.floor(Math.random()*14213);
+			item.referringVisitId = Math.floor(Math.random()*14213)+'';
 			item.transition = trans[Math.floor(Math.random()*trans.length)];
 			visitItems[i]=item;
 		}
