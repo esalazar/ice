@@ -3,6 +3,8 @@ import urllib2
 import os
 import shutil
 import json
+import subprocess
+import sys
 
 tempDir = "extension_temp/"
 
@@ -41,23 +43,17 @@ def unpackExtension(eID, localFile=""):
         extensionFile.close()
 
 def packExtension(eID):    
-    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + "_new.crx", "w")
-    oldCwd = os.getcwd()
-    os.chdir(tempDir + eID + "/extract")
-    for r,d,f in os.walk(""):
-        for dirs in d:
-            extension.write(r + dirs)
-        for files in f:
-            extension.write(r + files)
-    extension.close()
-    os.chdir(oldCwd)
-    f1 = open(tempDir + eID + "/" + eID + "_new2.crx", 'wb')
-    f2 = open(tempDir + eID + "/" + eID + "_new.crx", 'rb')
-    newExtension = f2.read()
-    f1.write("Cr24\002\0\0\0\0\0\0\001\0\0\0\0a" + newExtension)
-    f1.close()
-    f2.close()
-    
+    try: 
+        subprocess.call(["crxmake", "--pack-extension=%s" % (tempDir + eID + "/extract"), "--extension-output=%s.crx" % (eID)])
+    except:
+        print """You need to install crxmake to pack chrome extensions.
+crxmake is a ruby gem. To install, execute:
+$ gem install crxmake
+"""
+        sys.exit(1)
+    finally:
+        shutil.rmtree("extension_temp")
+        os.unlink("extract.pem")
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
