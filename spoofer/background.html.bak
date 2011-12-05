@@ -1,0 +1,50 @@
+<html>
+<head>
+	chrome.extension.onRequestExternal.addListener(
+		function(request, sender, sendResponse){
+			/*enumerate through request types*/
+			if (request.type = "geolocation"){
+				var x; /*Yes this is kludgy, but it's the best way to access the proto methods*/
+				sendResponse(fakeLocation());
+				delete x;
+			}
+	
+		}
+	);
+
+	chrome.extension.onConnectExternal.addListener(
+		function(port){
+			port.onMessage.addListener(function(msg){
+				if (msg.type = "geolocation"){
+					var x; 
+					port.postMessage(fakelocation());
+					delete x;
+				}
+			});
+		}
+	);
+	
+	var x;
+	function fakeLocation(){
+		function cheap(obj){x=obj;}
+		navigator.geolocation.getCurrentPosition(cheap,cheap);
+		if (localStorage.getItem('position') == null){
+			var pos =  new Object();
+			pos.coords  = new Object();
+			pos.timestamp = new Date().getTime();
+			pos.coords.latitude = 90*2*(Math.random()-.5);
+			pos.coords.longitude = 180*2*(Math.random()-.5);
+			pos.coords.accurracy = Math.floor(Math.random()*44000); 
+			localStorage.position = JSON.stringify(pos);
+		}else{var pos = JSON.parse(localStorage.getItem('position'));}
+		pos.__proto__ = x.__proto__; 
+		pos.coords.__proto__ = x.coords.__proto__;
+		pos.timestamp = new Date().getTime();
+		return pos;
+	}
+	
+</head>
+
+<body>
+</body>	
+</html>
