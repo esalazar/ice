@@ -17,42 +17,43 @@ def unpackExtension(eID, localFile=""):
         shutil.copytree(localFile, tempDir + eID + "/extract")
     else:
         extensionURL = "https://clients2.google.com/service/update2/crx?response=redirect&x=id%3D" + eID + "%26uc"
-        f = urllib2.urlopen(extensionURL)
         try:
-            os.mkdir(tempDir)
+            f = urllib2.urlopen(extensionURL)
         except:
-            pass
+            print "Unable to download extension due to invalid extension id"
+            sys.exit(1)
+
+        # make temp dir
         try:
-            os.mkdir(tempDir + eID)
+            os.makedirs(tempDir + eID + "/extract")
         except:
             shutil.rmtree(tempDir + eID)
-            os.mkdir(tempDir + eID)
-        try:
-            os.mkdir(tempDir + eID + "/extract")
-        except:
-            pass
+            os.makedirs(tempDir + eID + "/extract")
+       
+        # write extension to a local file
         extensionFile = open(tempDir + eID + "/" + eID + ".crx", "wb")
         extensionFile.write(f.read())
         extensionFile.close()
         f.close()
         
+        # extract crx file, which is basically a zip
         extensionFile = open(tempDir + eID + "/" + eID + ".crx", "rb")
         extension = zipfile.ZipFile(extensionFile)
         extension.extractall(tempDir + eID + "/extract")
         extension.close()
         extensionFile.close()
 
+# make use of the ruby gem `crxmake` to repack the extension
 def packExtension(eID):    
     try: 
         subprocess.call(["crxmake", "--pack-extension=%s" % (tempDir + eID + "/extract"), "--extension-output=%s.crx" % (eID)])
     except:
-        print """You need to install crxmake to pack chrome extensions.
-crxmake is a ruby gem. To install, execute:
-$ gem install crxmake
-"""
+        print "You need to install crxmake to pack chrome extensions."
+        print "crxmake is a ruby gem. To use, install ruby and then execute:"
+        print "    $ gem install crxmake"
         sys.exit(1)
     finally:
-        shutil.rmtree("extension_temp")
+        shutil.rmtree(tempDir)
         os.unlink("extract.pem")
 
 def getContentScripts(eID):
@@ -117,4 +118,14 @@ def removePermission(eID, url):
     f = open(extensionDir + "manifest.json", 'w')
     f.write(json.dumps(manifest, indent=2))
     f.close()
+
+def cleanup():
+    try:
+        shutil.rmtree(tempDir)
+    except:
+        pass
+    try:
+        os.unlink("extract.pem")
+    except:
+        pass
 

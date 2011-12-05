@@ -8,6 +8,20 @@ allPermissions = {"bookmarks": False,
                   "management": False}
 
 def main():
+    try:
+        # get user input to set perms
+        perms = ioloop()
+        # rewrite extension source
+        rewriter.rewriteJs(packer.getFileTypes(eID, ".js"), allPermissions)
+        rewriter.rewriteHtml(packer.getFileTypes(eID, ".html"), allPermissions)
+        # repack extension
+        packer.packExtension(eID)
+    except:
+        pass
+    finally:
+        packer.cleanup()
+
+def ioloop():
     # ask for chrome id
     eID = raw_input("ID of Chrome Extension: ")
     localFile = raw_input("Local file directory of Chrome Extension (if none press enter): ")
@@ -22,14 +36,14 @@ def main():
                 if allowUrl in ('y','yes','Y', 'YES'):
                     break
                 if allowUrl in ('n','no','N', 'NO'):
-                    packer.removePermissions(eID, permission)
+                    packer.removePermission(eID, permission)
                     break
             elif "<all_urls>" in permission:
                 allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access all websites? [y/n]: ")
                 if allowUrl in ('y','yes','Y', 'YES'):
                     break
                 if allowUrl in ('n','no','N', 'NO'):
-                    packer.removeUrlPermissions(eID, permission)
+                    packer.removePermission(eID, permission)
                     urlAllowList = raw_input("Please list the sites to allow seperated by commas (if none then press enter): ")
                     for url in urlAllowList.split(','):
                         packer.addPermissions(eID, url)
@@ -45,11 +59,6 @@ def main():
                     break
             else: # must be an unimportant permission
                 break
-    
-    rewriter.rewriteJs(packer.getFileTypes(eID, ".js"), allPermissions)
-    rewriter.rewriteHtml(packer.getFileTypes(eID, ".html"), allPermissions)
-    
-    #cleanup
-    packer.packExtension(eID)
-    
+
+    return allPermissions
     
