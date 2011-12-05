@@ -208,6 +208,18 @@ wrappers["management"]["passthrough"] = """
 wrapped_chrome.management = chrome.management
 """
 
+wrappers["geolocation"]["wrapped"] = """
+navigator.wrapped_geolocation = {
+    getCurrentPosition : function(callback) {
+        iced_coffee.passMessage({ 'type' : 'geolocation', 'input' : [id] }, callback);
+    }
+}
+"""
+
+wrappers["geolocation"]["passthrough"] = """
+navigator.wrapped_geolocation = navigator.geolocation
+"""
+
 untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler", "i18n",
         "idle", "omnibox", "pageAction", "proxy", "tabs", "tts", "ttsEngine",
         "types", "windows"]
@@ -216,7 +228,5 @@ untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler",
 for lib in untouched:
     wrappers[lib]["wrapped"] = wrappers[lib]["passthrough"] = "wrapped_chrome.%s = chrome.%s\n" %(lib, lib)
 
-wrappers["none"]["wrapped"] = wrappers["none"]["passthrough"] = "// do nothing"
-
-
+wrappers["none"]["wrapped"] = wrappers["none"]["passthrough"] = "// do nothing\n"
 

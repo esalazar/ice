@@ -18,7 +18,14 @@ def unpackExtension(eID, localFile=""):
         f = urllib2.urlopen(extensionURL)
         try:
             os.mkdir(tempDir)
+        except:
+            pass
+        try:
             os.mkdir(tempDir + eID)
+        except:
+            shutil.rmtree(tempDir + eID)
+            os.mkdir(tempDir + eID)
+        try:
             os.mkdir(tempDir + eID + "/extract")
         except:
             pass
@@ -34,11 +41,23 @@ def unpackExtension(eID, localFile=""):
         extensionFile.close()
 
 def packExtension(eID):    
-    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + ".zip", "w")
-    for r,d,f in os.walk(tempDir + eID + "/extract/" + eID + "/"):
+    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + "_new.crx", "w")
+    oldCwd = os.getcwd()
+    os.chdir(tempDir + eID + "/extract")
+    for r,d,f in os.walk(""):
+        for dirs in d:
+            extension.write(r + dirs)
         for files in f:
-            extension.write(r + "/" + files)
+            extension.write(r + files)
     extension.close()
+    os.chdir(oldCwd)
+    f1 = open(tempDir + eID + "/" + eID + "_new2.crx", 'wb')
+    f2 = open(tempDir + eID + "/" + eID + "_new.crx", 'rb')
+    newExtension = f2.read()
+    f1.write("Cr24\002\0\0\0\0\0\0\001\0\0\0\0a" + newExtension)
+    f1.close()
+    f2.close()
+    
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"

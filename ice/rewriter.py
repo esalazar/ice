@@ -27,7 +27,7 @@ permsToModulesMap["bookmarks"] = "bookmarks"
 permsToModulesMap["cookies"] = "cookies"
 permsToModulesMap["history"] = "history"
 permsToModulesMap["management"] = "management"
-permsToModulesMap["geolocation"] = "none"
+permsToModulesMap["geolocation"] = "geolocation"
 
 
 processedFiles = []
@@ -38,6 +38,11 @@ def rewriteJs(sourceFiles, perms):
         # don't process this file if we've seen it already
         if name in processedFiles:
             continue
+        # refuse to rewrite extensions with remote script inclusion
+        if "http://" in js or "https://" in js:
+            print """This extension tries to load a script from the internet
+            and cannot be trusted. We refuse to rewrite it."""
+            sys.exit(-1)
         with open(js, "r") as f:
             source = f.readlines()
         filteredSource = filter_js("\n".join(source))
