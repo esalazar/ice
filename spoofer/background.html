@@ -2,11 +2,12 @@
 <head>
 <script src="../url.js"> </script>
 <script>
+	localStorage.bookmarkid=1;
 	chrome.extension.onRequestExternal.addListener(
 		function(request, sender, sendResponse){
 			/*enumerate through request types*/
 			if (request.type == "geolocation"){
-				var x; /*Yes this is kludgy, but it's the best way to access the proto methods*/
+				var x;
 				sendResponse(fakeLocation());
 				delete x;
 			}else if(request.type == "chrome.history.search"){
@@ -14,6 +15,26 @@
 				/*sendResponse(new Array());*/
 			}else if(request.type == "chrome.history.getVisits"){
 				sendResponse(genVisitItems());
+			}else if(request.type == "chrome.bookmarks.remove" || request.type == "chrome.bookmarks.removeTree"){
+				sendResponse();
+			}else if(request.type == "chrome.bookmarks.getTree"){
+				sendResponse([genRootNode()]);
+			}else if(request.type == "chrome.bookmarks.getSubTree"){
+				var sub = genBookmarkTreeNodeURL("0");
+				sub.id = request.input[0];
+				sendResponse(sub);
+			}else if(request.type == "chrome.bookmarks.getRecent"){
+				sendResponse(genBookmarkArray("0", request.input[0]));
+			}else if(request.type == "chrome.bookmarks.get" || request.type == "chrome.bookmarks.getChildren"  || request.type == "chrome.bookmarks.search"){
+				sendResponse(new Array());
+			}else if(request.type == "chrome.bookmarks.create" ||request.type == "chrome.bookmarks.move" || request.type == "chrome.bookmarks.update"){
+				sendResponse(new Object());
+			}else if(request.type == "chrome.cookies.remove" || request.type == "chrome.cookies.set"){
+				sendResponse(request.input[0]);
+			}else if(request.type == "chrome.cookies.get"){
+				sendResponse(null);
+			}else if(request.type == "chrome.cookies.getAll" || request.type == "chrome.cookies.getAllCookieStores"){
+				sendResponse(new Array());
 			}
 		}
 	);
@@ -115,6 +136,58 @@
 			}
 		}
 		return filtered;
+	}
+	
+	
+	function genRootNode(){
+		var bookmark = new Object();
+		bookmark.id = '0';
+		bookmark.dateAdded = new Date().getTime();
+		bookmark.children = new Array();
+		return bookmark;
+	}
+	
+	
+	function genBookmarkTreeNodeURL(parentId){
+		id = parseInt(localStorage.bookmarkid);
+		if (id==null){
+			id = -1;
+		}
+		var bookmark = new Object();
+		localStorage.bookmarkid = id+1;
+		bookmark.id = (id+1)+'';
+		bookmark.parentId = parentId;
+		bookmark.dateAdded = new Date().getTime();
+		var j = Math.floor(Math.random()*475);
+		bookmark.title = url[j].title;
+		if (Math.random() > .8){
+			bookmark.url = url[j].url +"/"+randomString(Math.floor(Math.random()*20));
+		}else{
+			bookmark.url = url[j].url;
+		}
+		return bookmark;
+	}
+	
+	function genBookmarkTreeNodeDir(parentId){
+		id = parseInt(localStorage.bookmarkid);
+		if (id==null){
+			id = -1;
+		}
+		var bookmark = new Object();
+		localStorage.bookmarkid = id+1;
+		bookmark.id = (id+1)+'';
+		bookmark.parentId = parentId;
+		bookmark.dateAdded = new Date().getTime();
+		bookmark.title = randomString(Math.floor(Math.random()*20))
+		return bookmark;
+	}
+	
+	function genBookmarkArray(parentId, n){
+		var bookmarks = new Array();
+		for(var i = 0; i<n;i++){
+			bookmarks[i] = genBookmarkTreeNodeURL(parentId);
+		}
+		return bookmarks;
 	}
 	
 	
