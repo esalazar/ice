@@ -1,5 +1,6 @@
 import packer
 import rewriter
+import os
 import traceback
 import sys
 
@@ -19,6 +20,7 @@ def main():
         # repack extension
         packer.icedTitle(eID)
         packer.packExtension(eID)
+        print "All done. Double click %s/%s.crx to load it into Chrome." % (os.getcwd(), eID)
     except:
         print traceback.format_tb(sys.exc_info()[2])
     finally:
