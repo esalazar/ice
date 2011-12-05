@@ -2,12 +2,9 @@ import packer
 import rewriter
 
 allPermissions = {"bookmarks": False,
-                  "clipboardRead": False,
-                  "clipboardWrite": False,
                   "cookies": False,
                   "geolocation": False,
                   "history": False,
-                  "idle": False,
                   "management": False}
 
 def main():
