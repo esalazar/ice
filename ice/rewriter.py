@@ -11,11 +11,14 @@ try:
     import re
     import sys
     from slimit import ast, parser
+    import lxml.html
+    import lxml.html.clean
     import wrappers
 except ImportError:
-    print """slimit is not installed. Please run
+    print """slimit or lxml is not installed. Please run
 
     $ sudo easy_install slimit
+    $ sudo easy_install lxml
     """
     sys.exit(1)
 
@@ -27,12 +30,15 @@ permsToModulesMap["management"] = "management"
 
 
 
-def rewrite(sourceFiles, perms):
+def rewriteJs(sourceFiles, perms):
     for js in sourceFiles:
+        print js
         with open(js, "r") as f:
             source = f.readlines()
         filteredSource = filter_js("\n".join(source))
         with open(js, "w") as f:
+            # add iced coffee
+            txt += iced_coffee
             # write wrapped chrome.* APIs
             for perm, value in perms.iteritems():
                 wrappedState = "passthrough" if value else "wrapped"
@@ -42,6 +48,37 @@ def rewrite(sourceFiles, perms):
                 f.write(wrappers.wrappers[untouched]["wrapped"])
             f.write(trustedLib)
             f.write("\n")
+            f.write(filteredSource)
+
+def rewriteHtml(sourceFiles, perms):
+    for html in sourceFiles:
+        with open(html, "r") as f:
+            source = f.readlines()
+            source = "\n".join(source)
+
+        doc = lxml.html.fromstring(source)
+        for el in doc.iter():
+            if el.tag == 'script':
+                if el.text is not None:
+                    txt = ""
+                    # add iced coffee
+                    txt += iced_coffee
+                    # write wrapped chrome.* APIs
+                    for perm, value in perms.iteritems():
+                        wrappedState = "passthrough" if value else "wrapped"
+                        txt += wrappers.wrappers[permsToModulesMap[perm]][wrappedState]
+                    # write untouched passthrough wrappers
+                    for untouched in wrappers.untouched:
+                        txt += wrappers.wrappers[untouched]["wrapped"]
+                    txt += trustedLib + "\n"
+            
+                    el.text = txt + filter_js(el.text)
+                for a in el.attrib:
+                    if a == "src":
+                        rewriteJs([html.rsplit("/", 1)[0] + "/" + el.attrib[a]], perms)
+        filteredSource = lxml.html.tostring(doc, method="html")
+
+        with open(html, "w") as f:
             f.write(filteredSource)
 
 def filter_js(s):
