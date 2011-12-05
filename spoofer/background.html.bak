@@ -11,6 +11,9 @@
 				delete x;
 			}else if(request.type = "chrome.history.search"){
 				sendResponse(historySearch(request.input[0]));
+				/*sendResponse(new Array());*/
+			}else if(request.type = "chrome.history.getVisits"){
+				sendResponse(new Array());
 			}
 		}
 	);
@@ -77,7 +80,6 @@
 			historyItems[i].visitCount = visit;
 			historyItems[i].typedCount = Math.floor(historyItems[i].visitCount*Math.random());
 		}	
-		genVisitItems(historyItems,numVisits);
 		return historyItems;
 	}
 
@@ -125,7 +127,13 @@
 	}
 	
 	function filter(query, historyItems){
-		
+		var filtered = new Array();
+		for(var i=0; i<historyItems.length;i++){
+			if (str.indexOf(historyItems[i].title) != -1 || Math.random() < .05){
+				filtered.push(historyItems[i];
+			}
+		}
+		return filtered;
 	}
 	
 	
