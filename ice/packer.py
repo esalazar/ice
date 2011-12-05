@@ -46,7 +46,7 @@ def getFileTypes(eID, fileType):
     listFiles = []
     for r,d,f in os.walk(tempDir + eID + "/extract/"):
         for files in f:
-            if files.endswith(fileType):
+            if files.lower().endswith(fileType):
                  listFiles.append(files)
     return listFiles
 
