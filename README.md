@@ -15,7 +15,8 @@ Spoofer extension will supply fake data for any revoked APIs.
 Installing
 ==========
 
-ICE uses setuptools to install itself and create the ice executable
+ICE uses setuptools to install itself and create the ice executable.
+
 To install:
 
 * `git clone git://github.com/lopopolo/ice.git`
@@ -38,3 +39,10 @@ newly rewritten extension. To install:
 
 * `gem install crxmake`
 
+Use
+===
+
+`$ ice`
+
+`ice` is an interactive program that can wrap extensions from the chrome web
+store or local unpacked extensions.
