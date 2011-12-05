@@ -35,17 +35,16 @@ def unpackExtension(eID, localFile=""):
             os.makedirs(tempDir + eID + "/extract")
        
         # write extension to a local file
-        extensionFile = open(tempDir + eID + "/" + eID + ".crx", "wb")
-        extensionFile.write(f.read())
-        extensionFile.close()
-        f.close()
+        with open(tempDir + eID + "/" + eID + ".crx", "wb") as extensionFile:
+            extensionFile.write(f.read())
+            extensionFile.close()
+            f.close()
         
         # extract crx file, which is basically a zip
-        extensionFile = open(tempDir + eID + "/" + eID + ".crx", "rb")
-        extension = zipfile.ZipFile(extensionFile)
-        extension.extractall(tempDir + eID + "/extract")
-        extension.close()
-        extensionFile.close()
+        with open(tempDir + eID + "/" + eID + ".crx", "rb") as extensionFile:
+            extension = zipfile.ZipFile(extensionFile)
+            extension.extractall(tempDir + eID + "/extract")
+            extension.close()
 
 # make use of the ruby gem `crxmake` to repack the extension
 def packExtension(eID):    
@@ -62,13 +61,13 @@ def packExtension(eID):
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    # load manifest
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
     js = []
     for script in manifest['content_scripts']:
         for files in script["js"]:
             js.append(extensionDir + str(files))
-    f.close()
     return js
 
 def getFileTypes(eID, fileType):
@@ -81,59 +80,55 @@ def getFileTypes(eID, fileType):
 
 def getPermissions(eID):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    # load manifest
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
     perms = []
     for perm in manifest['permissions']:
         perms.append(str(perm))
-    f.close()
     return perms
 
 def getTitle(eID):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
     title = str(manifest["name"])
-    f.close()
     return title
 
 def icedTitle(eID):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
+
     manifest['description'] = "A sandboxed version of %s" % (manifest['name'])
     manifest['name'] = "Iced %s" % (manifest['name'])
-    f.close()
 
-    f = open(extensionDir + "manifest.json", 'w')
-    f.write(json.dumps(manifest, indent=2))
-    f.close()
+    with open(extensionDir + "manifest.json", 'w') as f:
+        f.write(json.dumps(manifest, indent=2))
 
 def addPermission(eID, url):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
+    
     manifest['permissions'].append(url)
-    f.close()
 
-    f = open(extensionDir + "manifest.json", 'w')
-    f.write(json.dumps(manifest, indent=2))
-    f.close()
+    with open(extensionDir + "manifest.json", 'w') as f:
+        f.write(json.dumps(manifest, indent=2))
 
 def removePermission(eID, url):
     extensionDir = tempDir + eID + "/extract/"
-    f = open(extensionDir + "manifest.json", 'r')
-    manifest = json.load(f)
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
+    
     perms = []
     for perm in manifest['permissions']:
         if url not in str(perm):
             perms.append(perm)
     manifest['permissions'] = perms
-    f.close()
 
-    f = open(extensionDir + "manifest.json", 'w')
-    f.write(json.dumps(manifest, indent=2))
-    f.close()
+    with open(extensionDir + "manifest.json", 'w') as f:
+        f.write(json.dumps(manifest, indent=2))
 
 def cleanup():
     try:
