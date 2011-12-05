@@ -28,17 +28,20 @@ permsToModulesMap["cookies"] = "cookies"
 permsToModulesMap["history"] = "history"
 permsToModulesMap["management"] = "management"
 
-
+processedFiles = []
 
 def rewriteJs(sourceFiles, perms):
     for js in sourceFiles:
-        print js
+        name = js.rsplit("/", 1)[1] # get filename
+        # don't process this file if we've seen it already
+        if name in processedFiles:
+            continue
         with open(js, "r") as f:
             source = f.readlines()
         filteredSource = filter_js("\n".join(source))
         with open(js, "w") as f:
             # add iced coffee
-            txt += iced_coffee
+            f.write(wrappers.iced_coffee)
             # write wrapped chrome.* APIs
             for perm, value in perms.iteritems():
                 wrappedState = "passthrough" if value else "wrapped"
@@ -49,6 +52,7 @@ def rewriteJs(sourceFiles, perms):
             f.write(trustedLib)
             f.write("\n")
             f.write(filteredSource)
+        processedFiles.append(name)
 
 def rewriteHtml(sourceFiles, perms):
     for html in sourceFiles:
@@ -62,7 +66,7 @@ def rewriteHtml(sourceFiles, perms):
                 if el.text is not None:
                     txt = ""
                     # add iced coffee
-                    txt += iced_coffee
+                    txt += wrappers.iced_coffee
                     # write wrapped chrome.* APIs
                     for perm, value in perms.iteritems():
                         wrappedState = "passthrough" if value else "wrapped"

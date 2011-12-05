@@ -6,11 +6,12 @@ import collections
 # extension.
 iced_coffee = """
 iced_coffee = {
-    id : "icedcoffee",
+    id : "pffbmilkmcdkfijnablbnmlckadbggca",
     passMessage : function(params, callback) {
         chrome.extension.sendRequest(iced_coffee.id, params, callback);
     },
 }
+wrapped_chrome = {}
 """
 
 # chrome api wrappers are stored in a doubly nested hash with
@@ -21,7 +22,7 @@ wrappers = collections.defaultdict(dict)
 wrappers["history"]["wrapped"] = """
 wrapped_chrome.history = {
     addUrl : function(details) {
-        # ignored
+        // ignored
     },
     deleteAll : function(callback) {
         callback();
@@ -30,7 +31,7 @@ wrapped_chrome.history = {
         callback();
     },
     deleteURL : function(details) {
-        # ignored
+        // ignored
     },
     getVisits : function(details, callback) {
         iced_coffee.passMessage({ 'type' : 'chrome.history.getVisits', 'input' : [details] }, callback);
@@ -40,12 +41,12 @@ wrapped_chrome.history = {
     },
     onVisitRemoved : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onVisited : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     }
 }
@@ -92,32 +93,32 @@ wrapped_chrome.bookmarks = {
     },
     onChanged : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onChildrenReordered : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onCreated : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onImportBegin : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onMoved : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onRemoved : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
 
@@ -147,7 +148,7 @@ wrapped_chrome.cookies = {
     },
     onChanged : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
 }
@@ -182,22 +183,22 @@ wrapped_chrome.management = {
     },
     onDisabled : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onEnabled : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onInstalled : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
     onUninstalled : {
         addListener : function(callback) {
-            # do nothing
+            // do nothing
         }
     },
 }

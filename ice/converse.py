@@ -1,4 +1,5 @@
 import packer
+import rewriter
 
 allPermissions = {"bookmarks": False,
                   "clipboardRead": False,
@@ -45,7 +46,9 @@ def main():
                     break
             else: # must be an unimportant permission
                 break
-    print allPermissions
+    
+    rewriter.rewriteJs(packer.getFileTypes(eID, ".js"), allPermissions)
+    rewriter.rewriteHtml(packer.getFileTypes(eID, ".html"), allPermissions)
     
     #cleanup
     packer.packExtension(eID)
