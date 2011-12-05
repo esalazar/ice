@@ -27,7 +27,7 @@ permsToModulesMap["bookmarks"] = "bookmarks"
 permsToModulesMap["cookies"] = "cookies"
 permsToModulesMap["history"] = "history"
 permsToModulesMap["management"] = "management"
-permsToModulesMap["geolocation"] = "none"
+permsToModulesMap["geolocation"] = "geolocation"
 
 
 processedFiles = []

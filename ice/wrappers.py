@@ -208,6 +208,18 @@ wrappers["management"]["passthrough"] = """
 wrapped_chrome.management = chrome.management
 """
 
+wrappers["geolocation"]["wrapped"] = """
+navigator.wrapped_geolocation = {
+    getCurrentPosition : function(callback) {
+        iced_coffee.passMessage({ 'type' : 'geolocation', 'input' : [id] }, callback);
+    }
+}
+"""
+
+wrappers["geolocation"]["passthrough"] = """
+navigator.wrapped_geolocation = navigator.geolocation
+"""
+
 untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler", "i18n",
         "idle", "omnibox", "pageAction", "proxy", "tabs", "tts", "ttsEngine",
         "types", "windows"]
