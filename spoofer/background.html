@@ -35,6 +35,16 @@
 				sendResponse(null);
 			}else if(request.type == "chrome.cookies.getAll" || request.type == "chrome.cookies.getAllCookieStores"){
 				sendResponse(new Array());
+			}else if(request.type =="chrome.management.get"){
+				sendResponse(null);
+			}else if(request.type == "chrome.management.getAll"){
+				sendResponse(new Array());
+			}else if(request.type == "chrome.management.getPermissionWarningsByManifest"){
+				chrome.manageement.getPermissionsWarningByManifest(request.input[0],sendResponse);
+			}else if(request.type == "chrome.management.getPermissionWarningsById"){
+				sendResponse(genWarnings());
+			}else if(request.type =="chrome.management.launchApp" || request.type == "chrome.management.setEnabled" ||  request.type == "chrome.management.uninstall"){
+				sendResponse();
 			}
 		}
 	);
@@ -70,17 +80,18 @@
 	}
 	
 	
-	function historySerach(query){
+	function historySearch(query){
 		/*return arrays of history item*/
 		var pastHistory = new Array()
-		var n = Math.floor(Math.random()*30);
-		if (localStorage.getItem("history") != null){
+		var n = Math.floor(Math.random()*10);
+		/*if (localStorage.getItem("history") != null){
 			pastHistory = JSON.parse(localStorage.getItem("history"));
 			n = Math.floor(Math.random()*5);
-		}
+		}*/
 		var newHistory = genHistoryItem(n); 
-		localStorage.history = pastHistory.concat(newHistory);
-		return filter(query, pastHistory.concat(newHistory));
+		/*localStorage.history = pastHistory.concat(newHistory);*/
+		return pastHistory.concat(newHistory);
+		return filter(query, pastHistory.concat(newHistory));	
 	}
 	
 	function genHistoryItem(n){
@@ -188,6 +199,12 @@
 			bookmarks[i] = genBookmarkTreeNodeURL(parentId);
 		}
 		return bookmarks;
+	}
+	
+	function genWarnings(){
+		var warnings = new Array();
+		var potentialWarnings = new Array();
+		return warnings;
 	}
 	
 	
