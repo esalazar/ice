@@ -222,5 +222,53 @@ wrapped_chrome.bookmarks = {
 }
 """
 
+wrappers["cookies"]["wrapped"] = """
+wrapped_chrome.cookies = {
+    get : function(details, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.cookies.get', 'input' : [details] }, callback);
+    },
+    getAll : function(details, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.cookies.getAll', 'input' : [details] }, callback);
+    },
+    getAllCookieStores : function(callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.cookies.getAllCookieStores', 'input' : [] }, callback);
+    },
+    remove : function(details, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.cookies.remove', 'input' : [details] }, callback);
+    },
+    set : function(details, callback) {
+        iced_coffee.passMessage({ 'type' : 'chrome.cookies.set', 'input' : [details] }, callback);
+    },
+    onChanged : {
+        addListener : function(callback) {
+            # do nothing
+        }
+    },
+}
+"""
 
+wrappers["cookies"]["passthrough"] = """
+wrapped_chrome.cookies = {
+    get : function(details, callback) {
+        chrome.cookies.get(details, callback);
+    },
+    getAll : function(details, callback) {
+        chrome.cookies.getAll(details, callback);
+    },
+    getAllCookieStores : function(callback) {
+        chrome.cookies.getAllCookieStores(callback);
+    },
+    remove : function(details, callback) {
+        chrome.cookies.remove(details, callback);
+    },
+    set : function(details, callback) {
+        chrome.cookies.set(details, callback);
+    },
+    onChanged : {
+        addListener : function(callback) {
+            chrome.cookies.onChanged.addListener(callback);
+        }
+    },
+}
+"""
 
