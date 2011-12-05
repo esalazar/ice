@@ -216,7 +216,5 @@ untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler",
 for lib in untouched:
     wrappers[lib]["wrapped"] = wrappers[lib]["passthrough"] = "wrapped_chrome.%s = chrome.%s\n" %(lib, lib)
 
-wrappers["none"]["wrapped"] = wrappers["none"]["passthrough"] = "// do nothing"
-
-
+wrappers["none"]["wrapped"] = wrappers["none"]["passthrough"] = "// do nothing\n"
 
