@@ -41,7 +41,7 @@ def unpackExtension(eID, localFile=""):
         extensionFile.close()
 
 def packExtension(eID):    
-    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + ".zip", "w")
+    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + "_new.crx", "w")
     oldCwd = os.getcwd()
     os.chdir(tempDir + eID + "/extract")
     for r,d,f in os.walk(""):
