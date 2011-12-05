@@ -11,6 +11,7 @@ iced_coffee = {
         chrome.extension.sendRequest(iced_coffee.id, params, callback);
     },
 }
+wrapped_chrome = {}
 """
 
 # chrome api wrappers are stored in a doubly nested hash with
