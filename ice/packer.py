@@ -92,7 +92,7 @@ def getTitle(eID):
     f.close()
     return title
 
-def addUrlPermission(eID, url):
+def addPermission(eID, url):
     extensionDir = tempDir + eID + "/extract/"
     f = open(extensionDir + "manifest.json", 'r')
     manifest = json.load(f)
@@ -103,7 +103,7 @@ def addUrlPermission(eID, url):
     f.write(json.dumps(manifest, indent=2))
     f.close()
 
-def removeUrlPermission(eID, url):
+def removePermission(eID, url):
     extensionDir = tempDir + eID + "/extract/"
     f = open(extensionDir + "manifest.json", 'r')
     manifest = json.load(f)
@@ -117,3 +117,4 @@ def removeUrlPermission(eID, url):
     f = open(extensionDir + "manifest.json", 'w')
     f.write(json.dumps(manifest, indent=2))
     f.close()
+

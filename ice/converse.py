@@ -22,7 +22,7 @@ def main():
                 if allowUrl in ('y','yes','Y', 'YES'):
                     break
                 if allowUrl in ('n','no','N', 'NO'):
-                    packer.removeUrlPermissions(eID, permission)
+                    packer.removePermissions(eID, permission)
                     break
             elif "<all_urls>" in permission:
                 allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access all websites? [y/n]: ")
@@ -32,7 +32,7 @@ def main():
                     packer.removeUrlPermissions(eID, permission)
                     urlAllowList = raw_input("Please list the sites to allow seperated by commas (if none then press enter): ")
                     for url in urlAllowList.split(','):
-                        packer.addUrlPermissions(eID, url)
+                        packer.addPermissions(eID, url)
                     break
             elif permission in allPermissions: # must be an important permission
                 allow = raw_input("Allow " + packer.getTitle(eID) + " to use " + permission + "? [y/n]: ")
@@ -41,6 +41,7 @@ def main():
                     break
                 if allow in ('n','no','N', 'NO'):
                     allPermissions[permission] = False
+                    packer.removePermission(eID, permission)
                     break
             else: # must be an unimportant permission
                 break
