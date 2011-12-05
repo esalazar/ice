@@ -12,15 +12,42 @@
 import collections
 
 # helper module. Provides a method for communicating with the spoofer
-# extension.
+# extension and other trusted functions to ensure safe runtime execution
 iced_coffee = """
 iced_coffee = {
     id : "pffbmilkmcdkfijnablbnmlckadbggca",
     passMessage : function(params, callback) {
         chrome.extension.sendRequest(iced_coffee.id, params, callback);
     },
+    // This function could be used in the future to check strings of
+    // array accesses.
+    // For now, it does nothing
+    arrayAccess : function(array, subscript) {
+        return array[iced_coffee.bracket_check(subscript)];
+    },
+
+    // Prevents dangerous properties from being accessed
+    bracket_check : function(input) {
+        if (typeof(input) === "number") {
+            return input;
+        }
+
+        var dangerous = ["__proto__", "prototype", "constructor", "__defineGetter__", "__defineSetter__"];
+        var copied_input = "";
+        var len = input.length;
+        for (var j = 0; j < len; j++) {
+            copied_input += input.charAt(j);
+        }
+        for (var i = 0; i < dangerous.length; i++) {
+            if (dangerous[i] == copied_input) {
+                throw Error("Illegal array subscript");
+            }
+        }
+        return copied_input;
+    }
 }
 wrapped_chrome = {}
+wrapped_iced_coffee = {}
 """
 
 # chrome api wrappers are stored in a doubly nested hash with

@@ -35,6 +35,8 @@ except ImportError:
 import jsvisitor
 import wrappers
 
+# this is a mapping from permission names to the
+# keys in wrappers.wrappers
 permsToModulesMap = {}
 permsToModulesMap["bookmarks"] = "bookmarks"
 permsToModulesMap["cookies"] = "cookies"
@@ -42,7 +44,7 @@ permsToModulesMap["history"] = "history"
 permsToModulesMap["management"] = "management"
 permsToModulesMap["geolocation"] = "geolocation"
 
-
+# a list of all js files we have processed already
 processedFiles = []
 
 def rewriteJs(sourceFiles, perms):
@@ -69,14 +71,18 @@ def rewriteJs(sourceFiles, perms):
             # write untouched passthrough wrappers
             for untouched in wrappers.untouched:
                 f.write(wrappers.wrappers[untouched]["wrapped"])
-            # write trusted lib
-            f.write(trustedLib)
             f.write("\n")
             f.write(filteredSource)
         processedFiles.append(path)
 
 def rewriteHtml(sourceFiles, perms):
     for html in sourceFiles:
+        path = os.path.abspath(html) # get unique path
+        # don't process this file if we've seen it already
+        if path in processedFiles:
+            print "Already processed %s. Skipping." % (path)
+            continue
+
         with open(html, "r") as f:
             source = f.readlines()
             source = "\n".join(source)
@@ -95,7 +101,6 @@ def rewriteHtml(sourceFiles, perms):
                     # write untouched passthrough wrappers
                     for untouched in wrappers.untouched:
                         txt += wrappers.wrappers[untouched]["wrapped"]
-                    txt += trustedLib + "\n"
             
                     el.text = txt + filter_js(el.text)
                 for a in el.attrib:
@@ -118,35 +123,4 @@ def filter_js(s):
     tree = jsParser.parse(s)
     visitor = jsvisitor.IceVisitor()
     return visitor.visit(tree)
-
-# this is a trusted javascript lib that contains methods used by
-# the rewriter to ensure safe runtime execution
-trustedLib = """
-// This function could be used in the future to check strings of
-// array accesses.
-// For now, it does nothing
-function arrayAccess(array, subscript) {
-    return array[bracket_check(subscript)];
-}
-
-// Prevents dangerous properties from being accessed
-function bracket_check(input) {
-    if (typeof(input) === "number") {
-        return input;
-    }
-
-    var dangerous = ["__proto__", "prototype", "constructor", "__defineGetter__", "__defineSetter__"];
-    var copied_input = "";
-    var len = input.length;
-    for (var j = 0; j < len; j++) {
-        copied_input += input.charAt(j);
-    }
-    for (var i = 0; i < dangerous.length; i++) {
-        if (dangerous[i] == copied_input) {
-            throw Error("Illegal array subscript");
-        }
-    }
-    return copied_input;
-}
-"""
 

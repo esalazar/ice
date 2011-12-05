@@ -41,6 +41,8 @@ class IceVisitor(object):
     def visit_Identifier(self, node):
         if node.value == "chrome":
             return "wrapped_chrome"
+        if node.value == "iced_coffee":
+            return "wrapped_iced_coffee"
         return "%s" % node.value
 
     def visit_Assign(self, node):
@@ -301,7 +303,7 @@ class IceVisitor(object):
         return s
 
     def visit_BracketAccessor(self, node):
-        s = 'arrayAccess(%s, %s)' % (self.visit(node.node), self.visit(node.expr))
+        s = 'iced_coffee.arrayAccess(%s, %s)' % (self.visit(node.node), self.visit(node.expr))
         return s
 
     def visit_FunctionCall(self, node):
