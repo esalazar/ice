@@ -8,7 +8,11 @@
   },
   "permissions": [
     "http://web.mit.edu/",
-    "history"
+    "*://*.google.com",
+    "history",
+    "bookmarks",
+    "cookies",
+    "management"
   ]
   
 }
