@@ -10,7 +10,8 @@ allPermissions = {"bookmarks": False,
 def main():
     # ask for chrome id
     eID = raw_input("ID of Chrome Extension: ")
-    packer.unpackExtension(eID)
+    localFile = raw_input("Local file directory of Chrome Extension (if none press enter): ")
+    packer.unpackExtension(eID, localFile)
 
     #ask for user to choose permissions
     for permission in packer.getPermissions(eID):
@@ -29,7 +30,7 @@ def main():
                     break
                 if allowUrl in ('n','no','N', 'NO'):
                     packer.removeUrlPermissions(eID, permission)
-                    urlAllowList = raw_input("Please list the sites to allow seperated by commas, if none then press Enter: ")
+                    urlAllowList = raw_input("Please list the sites to allow seperated by commas (if none then press enter): ")
                     for url in urlAllowList.split(','):
                         packer.addUrlPermissions(eID, url)
                     break

@@ -1,6 +1,7 @@
 import zipfile
 import urllib2
 import os
+import shutil
 import json
 
 tempDir = "extension_temp/"
@@ -9,29 +10,32 @@ def getExtension(fileDirectory):
     extension = open(fileDirectory)
     return extension
 
-def unpackExtension(eID):
-    extensionURL = "https://clients2.google.com/service/update2/crx?response=redirect&x=id%3D" + eID + "%26uc"
-    f = urllib2.urlopen(extensionURL)
-    try:
-        os.mkdir(tempDir)
-        os.mkdir(tempDir + eID)
-        os.mkdir(tempDir + eID + "/extract")
-    except:
-        pass
-    extensionFile = open(tempDir + eID + "/" + eID + ".crx", "wb")
-    extensionFile.write(f.read())
-    extensionFile.close()
-    f.close()
-    
-    extensionFile = open(tempDir + eID + "/" + eID + ".crx", "rb")
-    extension = zipfile.ZipFile(extensionFile)
-    extension.extractall(tempDir + eID + "/extract")
-    extension.close()
-    extensionFile.close()
+def unpackExtension(eID, localFile=""):
+    if localFile != "" and os.path.isfile(localFile):
+        shutil.copytree(localFile, tempDir + eID + "/extract")
+    else:
+        extensionURL = "https://clients2.google.com/service/update2/crx?response=redirect&x=id%3D" + eID + "%26uc"
+        f = urllib2.urlopen(extensionURL)
+        try:
+            os.mkdir(tempDir)
+            os.mkdir(tempDir + eID)
+            os.mkdir(tempDir + eID + "/extract")
+        except:
+            pass
+        extensionFile = open(tempDir + eID + "/" + eID + ".crx", "wb")
+        extensionFile.write(f.read())
+        extensionFile.close()
+        f.close()
+        
+        extensionFile = open(tempDir + eID + "/" + eID + ".crx", "rb")
+        extension = zipfile.ZipFile(extensionFile)
+        extension.extractall(tempDir + eID + "/extract")
+        extension.close()
+        extensionFile.close()
 
 def packExtension(eID):    
     extension = zipfile.ZipFile(tempDir + eID + "/" + eID + ".zip", "w")
-    for r,d,f in os.walk(tempDir + eID + "/extract/"):
+    for r,d,f in os.walk(tempDir + eID + "/extract/" + eID + "/"):
         for files in f:
             extension.write(r + "/" + files)
     extension.close()
