@@ -23,7 +23,8 @@ def unpackExtension(eID, localFile=""):
         try:
             os.mkdir(tempDir + eID)
         except:
-            pass
+            shutil.rmtree(tempDir + eID)
+            os.mkdir(tempDir + eID)
         try:
             os.mkdir(tempDir + eID + "/extract")
         except:
