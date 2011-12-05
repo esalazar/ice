@@ -13,7 +13,7 @@
 				sendResponse(historySearch(request.input[0]));
 				/*sendResponse(new Array());*/
 			}else if(request.type = "chrome.history.getVisits"){
-				sendResponse(new Array());
+				sendResponse(genVisitItems());
 			}
 		}
 	);
@@ -92,34 +92,16 @@
 		return string;
 	}
 	
-	function genVisitItems(historyItems,numVisit){
-		var oldVisitItems = new Array();
-		if(localStorage.getItem("visit") != null){
-			oldVisitItems = JSON.parse(localStorage.getItem("visit"));
-		}
-		var newVisitItems = new Array();
-		for (var i=0;i<historyItems.length;i++){
-			newVisitItems = newVisitItems.concat(genVisitItem(historyItems[i],40));
-		}
-		
-		/*
-		for (historyItem in historyItems){
-			newVisitItems = newVisitItems.concat(genVisitItem(historyItem,oldVisitItems.length+newVisitItems.length));
-		}*/
-		localStorage.visit = oldVisitItems.concat(newVisitItems);
-		return oldVisitItems.concat(newVisitItems);
-	}
-	
-	function genVisitItem(historyItem,lastId){
+	function genVisitItems(){
 		var trans = ["link", "typed", "auto_bookmark", "auto_subframe", "manual_subframe", "generated", "start_page", "form_submit", "reload", "keyword", "keyword_generated"];
 		var visitItems = new Array();
-		for(var i=0; i<historyItem.visitCount;i++){
+		for(var i=0; i<Math.floor(Math.random()*20);i++){
 			console.log(i);
 			var item = new Object();
-			item.id = historyItem.id;
-			item.visitId = i+lastId;
-			item.visitTime = historyItem.lastVisitTime - Math.random()*43534;
-			item.referringVisitId = Math.floor(Math.random()*lastId);
+			item.id = Math.floor(Math.random()*23252);
+			item.visitId = Math.floor(Math.random()*3423);
+			item.visitTime = new Date().getTime() - Math.random()*3*24*360000;
+			item.referringVisitId = Math.floor(Math.random()*14213);
 			item.transition = trans[Math.floor(Math.random()*trans.length)];
 			visitItems[i]=item;
 		}
@@ -130,7 +112,7 @@
 		var filtered = new Array();
 		for(var i=0; i<historyItems.length;i++){
 			if (str.indexOf(historyItems[i].title) != -1 || Math.random() < .05){
-				filtered.push(historyItems[i];
+				filtered.push(historyItems[i]);
 			}
 		}
 		return filtered;
