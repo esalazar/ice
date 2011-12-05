@@ -1,5 +1,14 @@
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
+# This module defines wrappers around privileged chrome.* APIs.
+# Wrapper functions are located in wrapped_chrome.{api name}
+# The wrapper either passes messages to the spoofer extension
+# or forwards parameters to the actual chrome API depending on
+# the user's preferences.
+#
+# Event listeners are unimplemented by the wrapped versions of
+# the APIs
+
 import collections
 
 # helper module. Provides a method for communicating with the spoofer
@@ -19,6 +28,7 @@ wrapped_chrome = {}
 # "passthrough"
 wrappers = collections.defaultdict(dict)
 
+# wrap chrome.history
 wrappers["history"]["wrapped"] = """
 wrapped_chrome.history = {
     addUrl : function(details) {
@@ -56,6 +66,7 @@ wrappers["history"]["passthrough"] = """
 wrapped_chrome.history = chrome.history
 """
 
+# wrap chrome.bookmarks
 wrappers["bookmarks"]["wrapped"] = """
 wrapped_chrome.bookmarks = {
     create : function(bookmark, callback) {
@@ -129,6 +140,7 @@ wrappers["bookmarks"]["passthrough"] = """
 wrapped_chrome.bookmarks = chrome.bookmarks
 """
 
+# wrap chrome.cookies
 wrappers["cookies"]["wrapped"] = """
 wrapped_chrome.cookies = {
     get : function(details, callback) {
@@ -158,6 +170,7 @@ wrappers["cookies"]["passthrough"] = """
 wrapped_chrome.cookies = chrome.cookies
 """
 
+# wrap chrome.management
 wrappers["management"]["wrapped"] = """
 wrapped_chrome.management = {
     get : function(id, callback) {
@@ -208,6 +221,7 @@ wrappers["management"]["passthrough"] = """
 wrapped_chrome.management = chrome.management
 """
 
+# wrap the geolocation API
 wrappers["geolocation"]["wrapped"] = """
 navigator.wrapped_geolocation = {
     getCurrentPosition : function(callback) {
@@ -220,13 +234,15 @@ wrappers["geolocation"]["passthrough"] = """
 navigator.wrapped_geolocation = navigator.geolocation
 """
 
+# list of APIs that we do not interpose on
 untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler", "i18n",
         "idle", "omnibox", "pageAction", "proxy", "tabs", "tts", "ttsEngine",
         "types", "windows"]
 
 # passthrough for untouched libs
 for lib in untouched:
-    wrappers[lib]["wrapped"] = wrappers[lib]["passthrough"] = "wrapped_chrome.%s = chrome.%s\n" %(lib, lib)
+    wrappers[lib]["wrapped"] = wrappers[lib]["passthrough"] = "wrapped_chrome.%s = chrome.%s\n" % (lib, lib)
 
+# stand-in for unimplemented APIs
 wrappers["none"]["wrapped"] = wrappers["none"]["passthrough"] = "// do nothing\n"
 
