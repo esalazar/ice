@@ -46,3 +46,14 @@ Use
 
 `ice` is an interactive program that can wrap extensions from the chrome web
 store or local unpacked extensions.
+
+The id `ice` prompts the user for is the long alphabetic identifier used by
+the chrome web store. For local extensions, this string can be anything.
+
+`ice` then asks the user to approve/deny all permissions the extension
+requests.
+
+`ice` outputs the wrapped extension as a crx file in the working directory. To
+use the new extension, the user must install the spoofer extension, located at
+`$REPO_ROOT/extensions/spoofer.crx` and the output crx file.
+
