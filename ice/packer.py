@@ -51,6 +51,13 @@ def packExtension(eID):
             extension.write(r + files)
     extension.close()
     os.chdir(oldCwd)
+    f1 = open(tempDir + eID + "/" + eID + "_new2.crx", 'wb')
+    f2 = open(tempDir + eID + "/" + eID + "_new.crx", 'rb')
+    newExtension = f2.read()
+    f1.write("Cr24\002\0\0\0\0\0\0\001\0\0\0\0a" + newExtension)
+    f1.close()
+    f2.close()
+    
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
