@@ -42,10 +42,15 @@ def unpackExtension(eID, localFile=""):
 
 def packExtension(eID):    
     extension = zipfile.ZipFile(tempDir + eID + "/" + eID + ".zip", "w")
-    for r,d,f in os.walk(tempDir + eID + "/extract/" + eID + "/"):
+    oldCwd = os.getcwd()
+    os.chdir(tempDir + eID + "/extract")
+    for r,d,f in os.walk(""):
+        for dirs in d:
+            extension.write(r + dirs)
         for files in f:
-            extension.write(r + "/" + files)
+            extension.write(r + files)
     extension.close()
+    os.chdir(oldCwd)
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
