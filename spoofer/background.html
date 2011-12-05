@@ -1,5 +1,7 @@
 <html>
 <head>
+<script src="../url.js"> </script>
+<script>
 	chrome.extension.onRequestExternal.addListener(
 		function(request, sender, sendResponse){
 			/*enumerate through request types*/
@@ -7,11 +9,15 @@
 				var x; /*Yes this is kludgy, but it's the best way to access the proto methods*/
 				sendResponse(fakeLocation());
 				delete x;
+			}else if(request.type = "chrome.history.search"){
+				/*sendResponse(historySearch(request.input[0]));*/
+				sendResponse(new Array());
+			}else if(request.type = "chrome.history.getVisits"){
+				sendResponse(new Array());
 			}
-	
 		}
 	);
-
+	/*
 	chrome.extension.onConnectExternal.addListener(
 		function(port){
 			port.onMessage.addListener(function(msg){
@@ -21,8 +27,8 @@
 					delete x;
 				}
 			});
-		}
-	);
+		}	
+	);*/
 	
 	function fakeLocation(){
 		function cheap(obj){x=obj;}
@@ -42,6 +48,93 @@
 		return pos;
 	}
 	
+	
+	function historySerach(query){
+		/*return arrays of history item*/
+		var pastHistory = new Array()
+		var n = Math.floor(Math.random()*30);
+		if (localStorage.getItem("history") != null){
+			pastHistory = JSON.parse(localStorage.getItem("history"));
+			n = Math.floor(Math.random()*5);
+		}
+		var newHistory = genHistoryItem(n); 
+		localStorage.history = pastHistory.concat(newHistory);
+		return filter(query, pastHistory.concat(newHistory));
+	}
+	
+	function genHistoryItem(n){
+		var historyItems = new Array();
+		var numVisits = 0;
+		for (var i=0; i <n; i++){
+			historyItems[i] = new Object();
+			historyItems[i].id = Math.floor(Math.random()*10000)
+			var j = Math.floor(Math.random()*475);
+			historyItems[i].url = url[j].url;
+			if (Math.random() <= .5){
+				historyItems[i].url = historyItems[i].url+"/"+randomString(Math.floor(Math.random()*20));
+			}
+			historyItems[i].title = url[j].title;
+			historyItems[i].lastVisitTime = new Date().getTime() - Math.floor((Math.random()*360000*6));
+			var visit =  Math.floor(Math.random()*10);
+			numVisits = numVisits+visit;
+			historyItems[i].visitCount = visit;
+			historyItems[i].typedCount = Math.floor(historyItems[i].visitCount*Math.random());
+		}	
+		genVisitItems(historyItems,numVisits);
+		return historyItems;
+	}
+
+	function randomString(chars){
+		var letters = '0123/456789Q/WERTYU/IOPASD//FGHJKL/ZXCVBN/M?/.,!qwertyuiopasdf/ghjklzxcvbnm';
+		var string = '';
+		for(var i=0;i<chars;i++){
+			string = string+letters[Math.floor(letters.length*Math.random())];
+		}
+		return string;
+	}
+	
+	function genVisitItems(historyItems,numVisit){
+		var oldVisitItems = new Array();
+		if(localStorage.getItem("visit") != null){
+			oldVisitItems = JSON.parse(localStorage.getItem("visit"));
+		}
+		var newVisitItems = new Array();
+		for (var i=0;i<historyItems.length;i++){
+			newVisitItems = newVisitItems.concat(genVisitItem(historyItems[i],40));
+		}
+		
+		/*
+		for (historyItem in historyItems){
+			newVisitItems = newVisitItems.concat(genVisitItem(historyItem,oldVisitItems.length+newVisitItems.length));
+		}*/
+		localStorage.visit = oldVisitItems.concat(newVisitItems);
+		return oldVisitItems.concat(newVisitItems);
+	}
+	
+	function genVisitItem(historyItem,lastId){
+		var trans = ["link", "typed", "auto_bookmark", "auto_subframe", "manual_subframe", "generated", "start_page", "form_submit", "reload", "keyword", "keyword_generated"];
+		var visitItems = new Array();
+		for(var i=0; i<historyItem.visitCount;i++){
+			console.log(i);
+			var item = new Object();
+			item.id = historyItem.id;
+			item.visitId = i+lastId;
+			item.visitTime = historyItem.lastVisitTime - Math.random()*43534;
+			item.referringVisitId = Math.floor(Math.random()*lastId);
+			item.transition = trans[Math.floor(Math.random()*trans.length)];
+			visitItems[i]=item;
+		}
+		return visitItems;
+	}
+	
+	function filter(query, historyItems){
+		
+	}
+	
+	
+</script>	
+
+
 </head>
 
 <body>
