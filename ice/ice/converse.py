@@ -1,5 +1,7 @@
 import packer
 import rewriter
+import traceback
+import sys
 
 allPermissions = {"bookmarks": False,
                   "cookies": False,
@@ -18,7 +20,7 @@ def main():
         packer.icedTitle(eID)
         packer.packExtension(eID)
     except:
-        pass
+        print traceback.format_tb(sys.exc_info()[2])
     finally:
         packer.cleanup()
 

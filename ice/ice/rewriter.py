@@ -10,6 +10,7 @@
 # TODO: disallow eval
 
 # safe pystdlib imports
+import os.path
 import sys
 
 try:
@@ -46,16 +47,11 @@ processedFiles = []
 
 def rewriteJs(sourceFiles, perms):
     for js in sourceFiles:
-        name = js.rsplit("/", 1)[1] # get filename
+        path = os.path.abspath(js) # get unique path
         # don't process this file if we've seen it already
-        if name in processedFiles:
-            continue
-
-        # refuse to rewrite extensions with remote script inclusion
-        if "http://" in js or "https://" in js:
-            print "This extension tries to load a script from the internet " + \
-                  "and cannot be trusted. We refuse to rewrite it."
-            sys.exit(-1)
+        if path in processedFiles:
+            print "Already processed %s. Skipping." % (path)
+            continue 
 
         # read in js source
         with open(js, "r") as f:
@@ -77,7 +73,7 @@ def rewriteJs(sourceFiles, perms):
             f.write(trustedLib)
             f.write("\n")
             f.write(filteredSource)
-        processedFiles.append(name)
+        processedFiles.append(path)
 
 def rewriteHtml(sourceFiles, perms):
     for html in sourceFiles:
@@ -104,7 +100,14 @@ def rewriteHtml(sourceFiles, perms):
                     el.text = txt + filter_js(el.text)
                 for a in el.attrib:
                     if a == "src":
-                        rewriteJs([html.rsplit("/", 1)[0] + "/" + el.attrib[a]], perms)
+                        # refuse to rewrite extensions with remote script inclusion
+                        if "http://" in el.attrib[a] or "https://" in el.attrib[a]:
+                            print "This extension tries to load a script from the internet " + \
+                                  "and cannot be trusted. We refuse to rewrite it."
+                            sys.exit(-1)
+                        # no need to rewrite local js files encountered here because
+                        # we already walk the extension dir to find all js files
+
         filteredSource = lxml.html.tostring(doc, method="html")
 
         with open(html, "w") as f:
