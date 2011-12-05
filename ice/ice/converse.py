@@ -38,7 +38,7 @@ def ioloop():
     for permission in packer.getPermissions(eID):
         print permission
         while 1:
-            if "<all_urls>" in permission or ["%s://*" % (scheme) for scheme in schemes] in permission:
+            if "<all_urls>" in permission or permission in ["%s://*" % (scheme) for scheme in schemes]:
                 allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access all websites? [y/n]: ")
                 if allowUrl in ('y','yes','Y', 'YES'):
                     break
