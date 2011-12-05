@@ -32,7 +32,7 @@ def main():
                 if allowUrl in ('n','no','N', 'NO'):
                     packer.removeUrlPermissions(eID, permission)
                     urlAllowList = raw_input("Please list the sites to allow seperated by commas, if none then press Enter: ")
-                    for url in urlAllowList:
+                    for url in urlAllowList.split(','):
                         packer.addUrlPermissions(eID, url)
                     break
             elif permission in allPermissions: # must be an important permission
