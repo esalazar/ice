@@ -43,6 +43,8 @@ class IceVisitor(object):
             return "wrapped_chrome"
         if node.value == "iced_coffee":
             return "wrapped_iced_coffee"
+        if node.value == "geolocation":
+            return "wrapped_geolocation"
         return "%s" % node.value
 
     def visit_Assign(self, node):
