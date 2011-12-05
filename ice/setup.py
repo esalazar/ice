@@ -1,3 +1,5 @@
+# followed documentation at http://peak.telecommunity.com/DevCenter/setuptools
+
 from setuptools import setup, find_packages
 setup(
     name = "ICE",
