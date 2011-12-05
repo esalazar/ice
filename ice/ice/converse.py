@@ -10,6 +10,8 @@ allPermissions = {"bookmarks": False,
                   "history": False,
                   "management": False}
 
+schemes = ['*', 'http', 'https', 'file', 'ftp']
+
 def main():
     try:
         # get user input to set perms
@@ -36,14 +38,7 @@ def ioloop():
     for permission in packer.getPermissions(eID):
         print permission
         while 1:
-            if "://" in permission and not permission == "chrome://favicon/": # must be a url
-                allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access " + permission + "? [y/n]: ")
-                if allowUrl in ('y','yes','Y', 'YES'):
-                    break
-                if allowUrl in ('n','no','N', 'NO'):
-                    packer.removePermission(eID, permission)
-                    break
-            elif "<all_urls>" in permission:
+            if "<all_urls>" in permission or ["%s://*" % (scheme) for scheme in schemes] in permission:
                 allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access all websites? [y/n]: ")
                 if allowUrl in ('y','yes','Y', 'YES'):
                     break
@@ -52,6 +47,13 @@ def ioloop():
                     urlAllowList = raw_input("Please list the sites to allow seperated by commas (if none then press enter): ")
                     for url in urlAllowList.split(','):
                         packer.addPermissions(eID, url)
+                    break
+            elif "://" in permission and not permission == "chrome://favicon/": # must be a url
+                allowUrl = raw_input("Allow " + packer.getTitle(eID) + " to access " + permission + "? [y/n]: ")
+                if allowUrl in ('y','yes','Y', 'YES'):
+                    break
+                if allowUrl in ('n','no','N', 'NO'):
+                    packer.removePermission(eID, permission)
                     break
             elif permission in allPermissions: # must be an important permission
                 allow = raw_input("Allow " + packer.getTitle(eID) + " to use " + permission + "? [y/n]: ")
