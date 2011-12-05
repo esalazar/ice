@@ -16,7 +16,7 @@ iced_coffee = {
 # chrome api wrappers are stored in a doubly nested hash with
 # keys: api name, and a string that is either "wrapped" or
 # "passthrough"
-wrappers = collections.defaultdict({})
+wrappers = collections.defaultdict(dict)
 
 wrappers["history"]["wrapped"] = """
 wrapped_chrome.history = {
@@ -51,37 +51,8 @@ wrapped_chrome.history = {
 }
 """
 
-wrapped["history"]["passthrough"] = """
-wrapped_chrome.history = {
-    addUrl : function(details) {
-        chrome.history.addUrl(details);
-    },
-    deleteAll : function(callback) {
-        chrome.history.deleteAll(callback);
-    },
-    deleteRange : function(range, callback) {
-        chrome.history.deleteRange(range, callback);
-    },
-    deleteURL : function(details) {
-        chrome.history.deleteURL(details);
-    },
-    getVisits : function(details, callback) {
-        chrome.history.getVisits(details, callback);
-    },
-    search : function(query, callback) {
-        chrome.history.search(query, callback);
-    },
-    onVisitRemoved : {
-        addListener : function(callback) {
-            chrome.history.onVisitRemoved.addListener(callback);
-        }
-    },
-    onVisited : {
-        addListener : function(callback) {
-            chrome.history.onVisited.addListener(callback);
-        }
-    }
-}
+wrappers["history"]["passthrough"] = """
+wrapped_chrome.history = chrome.history
 """
 
 wrappers["bookmarks"]["wrapped"] = """
@@ -154,72 +125,7 @@ wrapped_chrome.bookmarks = {
 """
 
 wrappers["bookmarks"]["passthrough"] = """
-wrapped_chrome.bookmarks = {
-    create : function(bookmark, callback) {
-        chrome.bookmarks.create(bookmark, callback);
-    },
-    get : function(idOrIdList, callback) {
-        chrome.bookmarks.get(idOrIdList, callback);
-    },
-    getChildren : function(id, callback) {
-        chrome.bookmarks.getChildren(id, callback);
-    },
-    getRecent : function(numberOfItems, callback) {
-        chrome.bookmarks.getRecent(numberOfItems, callback);
-    },
-    getSubTree : function(id, callback) {
-        chrome.bookmarks.getSubTree(id, callback);
-    },
-    getTree : function(callback) {
-        chrome.bookmarks.getTree(callback);
-    },
-    move : function(id, destination, callback) {
-        chrome.bookmarks.move(id, destination, callback);
-    },
-    remove : function(id, callback) {
-        chrome.bookmarks.remove(id, callback);
-    },
-    removeTree : function(id, callback) {
-        chrome.bookmarks.removeTree(id, callback);
-    },
-    search : function(query, callback) {
-        chrome.bookmarks.search(query, callback);
-    },
-    update : function(id, changes, callback) {
-        chrome.bookmarks.update(id, changes, callback);
-    },
-    onChanged : {
-        addListener : function(callback) {
-            chrome.bookmarks.onChanged.addListener(callback);
-        }
-    },
-    onChildrenReordered : {
-        addListener : function(callback) {
-            chrome.bookmarks.onChildrenReordered.addListener(callback);
-        }
-    },
-    onCreated : {
-        addListener : function(callback) {
-            chrome.bookmarks.onCreated.addListener(callback);
-        }
-    },
-    onImportBegin : {
-        addListener : function(callback) {
-            chrome.bookmarks.onImportBegin.addListener(callback);
-        }
-    },
-    onMoved : {
-        addListener : function(callback) {
-            chrome.bookmarks.onMoved.addListener(callback);
-        }
-    },
-    onRemoved : {
-        addListener : function(callback) {
-            chrome.bookmarks.onRemoved.addListener(callback);
-        }
-    },
-
-}
+wrapped_chrome.bookmarks = chrome.bookmarks
 """
 
 wrappers["cookies"]["wrapped"] = """
@@ -248,28 +154,7 @@ wrapped_chrome.cookies = {
 """
 
 wrappers["cookies"]["passthrough"] = """
-wrapped_chrome.cookies = {
-    get : function(details, callback) {
-        chrome.cookies.get(details, callback);
-    },
-    getAll : function(details, callback) {
-        chrome.cookies.getAll(details, callback);
-    },
-    getAllCookieStores : function(callback) {
-        chrome.cookies.getAllCookieStores(callback);
-    },
-    remove : function(details, callback) {
-        chrome.cookies.remove(details, callback);
-    },
-    set : function(details, callback) {
-        chrome.cookies.set(details, callback);
-    },
-    onChanged : {
-        addListener : function(callback) {
-            chrome.cookies.onChanged.addListener(callback);
-        }
-    },
-}
+wrapped_chrome.cookies = chrome.cookies
 """
 
 wrappers["management"]["wrapped"] = """
@@ -319,48 +204,16 @@ wrapped_chrome.management = {
 """
 
 wrappers["management"]["passthrough"] = """
-wrapped_chrome.management = {
-    get : function(id, callback) {
-        chrome.management.get(id, callback);
-    },
-    getAll : function(callback) {
-        chrome.management.getAll(callback);
-    },
-    getPermissionWarningsById : function(id, callback) {
-        chrome.management.getPermissionWarningsById(id, callback);
-    },
-    getPermissionWarningsByManifest : function(id, callback) {
-        chrome.management.getPermissionWarningsByManifest(id, callback);
-    },
-    launchApp : function(id, callback) {
-        chrome.management.launchApp(id, callback);
-    },
-    setEnabled : function(id, enabled, callback) {
-        chrome.management.setEnabled(id, enabled, callback);
-    },
-    uninstall : function(id, callback) {
-        chrome.management.uninstall(id, callback);
-    },
-    onDisabled : {
-        addListener : function(callback) {
-            chrome.management.onDisabled.addListener(callback);
-        }
-    },
-    onEnabled : {
-        addListener : function(callback) {
-            chrome.management.onEnabled.addListener(callback);            
-        }
-    },
-    onInstalled : {
-        addListener : function(callback) {
-            chrome.management.onInstalled.addListener(callback);            
-        }
-    },
-    onUninstalled : {
-        addListener : function(callback) {
-            chrome.management.onUninstalled.addListener(callback);
-        }
-    },
-}
+wrapped_chrome.management = chrome.management
 """
+
+untouched = ["browserAction", "contextMenus", "extension", "fileBrowserHandler", "i18n",
+        "idle", "omnibox", "pageAction", "proxy", "tabs", "tts", "ttsEngine",
+        "types", "windows"]
+
+# passthrough for untouched libs
+for lib in untouched:
+    wrappers[lib]["wrapped"] = wrappers[lib]["passthrough"] = "wrapped_chrome.%s = chrome.%s\n" %(lib, lib)
+
+
 
