@@ -31,7 +31,7 @@ def unpackExtension(eID):
 def packExtension(eID):
     pass
 
-def getScripts(eID):
+def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
     f = open(extensionDir + "manifest.json", 'r')
     manifest = json.load(f)
@@ -42,6 +42,14 @@ def getScripts(eID):
     f.close()
     return js
 
+def getFileTypes(eID, fileType):
+    listFiles = []
+    for r,d,f in os.walk(tempDir + eID + "/extract/"):
+        for files in f:
+            if files.endswith(fileType):
+                 listFiles.append(files)
+    return listFiles
+
 def getPermissions(eID):
     extensionDir = tempDir + eID + "/extract/"
     f = open(extensionDir + "manifest.json", 'r')
@@ -51,3 +59,37 @@ def getPermissions(eID):
         perms.append(str(perm))
     f.close()
     return perms
+
+def getTitle(eID):
+    extensionDir = tempDir + eID + "/extract/"
+    f = open(extensionDir + "manifest.json", 'r')
+    manifest = json.load(f)
+    title = str(manifest["name"])
+    f.close()
+    return title
+
+def addUrlPermission(eID, url):
+    extensionDir = tempDir + eID + "/extract/"
+    f = open(extensionDir + "manifest.json", 'r')
+    manifest = json.load(f)
+    manifest['permissions'].append(url)
+    f.close()
+
+    f = open(extensionDir + "manifest.json", 'w')
+    f.write(json.dumps(manifest, indent=2))
+    f.close()
+
+def removeUrlPermission(eID, url):
+    extensionDir = tempDir + eID + "/extract/"
+    f = open(extensionDir + "manifest.json", 'r')
+    manifest = json.load(f)
+    perms = []
+    for perm in manifest['permissions']:
+        if url not in str(perm):
+            perms.append(perm)
+    manifest['permissions'] = perms
+    f.close()
+
+    f = open(extensionDir + "manifest.json", 'w')
+    f.write(json.dumps(manifest, indent=2))
+    f.close()
