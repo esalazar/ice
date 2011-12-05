@@ -26,10 +26,15 @@ def unpackExtension(eID):
     extensionFile = open(tempDir + eID + "/" + eID + ".crx", "rb")
     extension = zipfile.ZipFile(extensionFile)
     extension.extractall(tempDir + eID + "/extract")
+    extension.close()
     extensionFile.close()
 
-def packExtension(eID):
-    pass
+def packExtension(eID):    
+    extension = zipfile.ZipFile(tempDir + eID + "/" + eID + ".zip", "w")
+    for r,d,f in os.walk(tempDir + eID + "/extract/"):
+        for files in f:
+            extension.write(r + "/" + files)
+    extension.close()
 
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
@@ -47,7 +52,7 @@ def getFileTypes(eID, fileType):
     for r,d,f in os.walk(tempDir + eID + "/extract/"):
         for files in f:
             if files.lower().endswith(fileType):
-                 listFiles.append(files)
+                listFiles.append(r + "/" + files)
     return listFiles
 
 def getPermissions(eID):
