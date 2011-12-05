@@ -14,7 +14,11 @@ def getExtension(fileDirectory):
 
 def unpackExtension(eID, localFile=""):
     if localFile != "" and os.path.exists(localFile):
-        shutil.copytree(localFile, tempDir + eID + "/extract")
+        try:
+            shutil.copytree(localFile, tempDir + eID + "/extract")
+        except:
+            shutil.rmtree(tempDir + eID + "/extract")
+            shutil.copytree(localFile, tempDir + eID + "/extract")
     else:
         extensionURL = "https://clients2.google.com/service/update2/crx?response=redirect&x=id%3D" + eID + "%26uc"
         try:
@@ -92,6 +96,18 @@ def getTitle(eID):
     title = str(manifest["name"])
     f.close()
     return title
+
+def icedTitle(eID):
+    extensionDir = tempDir + eID + "/extract/"
+    f = open(extensionDir + "manifest.json", 'r')
+    manifest = json.load(f)
+    manifest['description'] = "A sandboxed version of %s" % (manifest['name'])
+    manifest['name'] = "Iced %s" % (manifest['name'])
+    f.close()
+
+    f = open(extensionDir + "manifest.json", 'w')
+    f.write(json.dumps(manifest, indent=2))
+    f.close()
 
 def addPermission(eID, url):
     extensionDir = tempDir + eID + "/extract/"

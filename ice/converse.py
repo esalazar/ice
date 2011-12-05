@@ -10,11 +10,12 @@ allPermissions = {"bookmarks": False,
 def main():
     try:
         # get user input to set perms
-        perms = ioloop()
+        eID, perms = ioloop()
         # rewrite extension source
         rewriter.rewriteJs(packer.getFileTypes(eID, ".js"), allPermissions)
         rewriter.rewriteHtml(packer.getFileTypes(eID, ".html"), allPermissions)
         # repack extension
+        packer.icedTitle(eID)
         packer.packExtension(eID)
     except:
         pass
@@ -60,5 +61,5 @@ def ioloop():
             else: # must be an unimportant permission
                 break
 
-    return allPermissions
+    return (eID, allPermissions)
     
