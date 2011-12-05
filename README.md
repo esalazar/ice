@@ -12,8 +12,20 @@ functions. During the extension rewriting process, users are prompted to approve
 individual permissions. If the user chooses, they can "revoke" a permission. The
 Spoofer extension will supply fake data for any revoked APIs.
 
+Installing
+==========
+
+ICE uses setuptools to install itself and create the ice executable
+To install:
+
+* `git clone git://github.com/lopopolo/ice.git`
+* `cd ice/ice`
+* `python setup.py install`
+
 Dependencies
 ============
+
+If you choose to go the manual route ...
 
 The ICE rewriter is written in python and requires the `slimit` and `lxml`
 packages. To install these:
