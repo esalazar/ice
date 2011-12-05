@@ -1,1 +1,4 @@
 *.pyc
+ice/ICE.egg-info
+ice/build
+ice/dist
