@@ -11,7 +11,7 @@ def getExtension(fileDirectory):
     return extension
 
 def unpackExtension(eID, localFile=""):
-    if localFile != "" and os.path.isfile(localFile):
+    if localFile != "" and os.path.exists(localFile):
         shutil.copytree(localFile, tempDir + eID + "/extract")
     else:
         extensionURL = "https://clients2.google.com/service/update2/crx?response=redirect&x=id%3D" + eID + "%26uc"
