@@ -48,6 +48,7 @@
   <body>
     <div id="content">
       <img src="img/too-damn-high.jpg" />
+      <a name="ice"></a>
       <h1>ICE - Interposing on Chrome Extensions</h1>
       <p>The problem with permissions in Chrome extensions is that they are an all or nothing
       affair. Users do not figure into the process of what extensions have access to.</p>
@@ -66,6 +67,7 @@
         </ol>    
       </p>
 
+      <a name="installation"></a>
       <h2>Installation</h2>
       <div class="code">
         $ git clone git://github.com/lopopolo/ice.git<br>
@@ -74,6 +76,7 @@
         $ gem install crxmake
       </div>
 
+      <a name="demo"></a>
       <h2>Let's see it in action</h2>
       <p>So we've installed Spoofer and we're ready to start sandboxing extensions. The repo
       has an example of a nefarious extension, Coffee. Coffee is located at <span class="inlinecode">
@@ -95,6 +98,7 @@
       <p>But look, you say, it still is getting history data. Very good, I say to you; however, the data
       it does get is faked using a state of the art method: randomly generated URLs.</p>
 
+      <a name="other-features"></a>
       <h2>Other Features</h2>
       <p>ICE can wrap extensions directly from the chrome webstore by passing it the alpha-id of the
       extension. (You can grab it from the url of the web store page.)</p>
@@ -102,6 +106,7 @@
       at all. That's a bad extension; this is a kitty.</p>
       <img src="http://img150.imageshack.us/img150/8185/officeravatar.jpg" />
 
+      <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
         <li>Extensions can still figure out if they're sandboxed. If an extension originally has
@@ -111,6 +116,7 @@
         <li>We need to disallow access to <span class="inlinecode">eval</span>.</li>
       </ol>
 
+      <a name="authors"></a>
       <h2>Authors</h2>
       <ul>
         <li><a href="https://github.com/lopopolo">Ryan Lopopolo</a></li>
