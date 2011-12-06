@@ -24,7 +24,7 @@ def main():
         packer.packExtension(eID)
         print "All done. Double click %s/%s.crx to load it into Chrome." % (os.getcwd(), eID)
     except:
-        print traceback.format_tb(sys.exc_info()[2])
+        print traceback.format_exc()
     finally:
         packer.cleanup()
 

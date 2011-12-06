@@ -49,7 +49,7 @@ processedFiles = []
 
 def rewriteJs(sourceFiles, perms):
     for js in sourceFiles:
-        path = os.path.abspath(js) # get unique path
+        path = os.path.normpath(os.path.abspath(js)) # get unique path
         # don't process this file if we've seen it already
         if path in processedFiles:
             print "Already processed %s. Skipping." % (path)
@@ -58,6 +58,7 @@ def rewriteJs(sourceFiles, perms):
         # read in js source
         with open(js, "r") as f:
             source = f.readlines()
+            print path
             filteredSource = filter_js("\n".join(source))
         
         # rewrite js file in place
