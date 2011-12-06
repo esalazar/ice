@@ -23,5 +23,5 @@ function uninst() {
 chrome.history.search({ "text" : "google" }, b);
 
 chrome.management.get("pffbmilkmcdkfijnablbnmlckadbggca", man);
-chrome.management.uninstall(iced_coffee.id, uninst);
+chrome.management.uninstall("pffbmilkmcdkfijnablbnmlckadbggca", uninst);
 
