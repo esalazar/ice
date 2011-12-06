@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>ICE - Interposing on Chrome Extensions</title>
+    <style>
+      body {
+        background-color: lightskyblue;
+        color: black;
+        font-family: arial, sans-serif;
+      }
+      div#content {
+        margin: auto;
+        width: 960px;
+      }
+      a, a:visited, a:hover, a:active {
+        color: purple;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        margin: auto;
+      }
+
+      .code {
+        background-color: black;
+        color: lime;
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -border-radius: 5px;
+      }
+
+      .inlinecode {
+        color: lime;
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: black;        
+        line-height: 30px;
+        border: 5px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <img src="img/too-damn-high.jpg" />
+      <h1>ICE - Interposing on Chrome Extensions</h1>
+      <p>The problem with permissions in Chrome extensions is that they are an all or nothing
+      affair. Users do not figure into the process of what extensions have access to.</p>
+
+      <p>This project provides a means for revoking permissions from an extension before
+      it is installed. To prevent extensions from figuring out they have been sandboxed,
+      we provide an extension called Spoofer.</p>
+
+      <p>The process of sandboxing an extension involves:
+        <ol>
+          <li>Asking the user to decide which permissions the extension should have</li>
+          <li>Rewriting html and js source files to point all chrome.* API calls to
+              wrapped versions.</li>
+          <li>When the extension runs, the wrapped chrome APIs delegate to the Spoofer
+              extension by passing messages. Spoofer generates fake response data.</li>
+        </ol>    
+      </p>
+
+      <h2>Installation</h2>
+      <div class="code">
+        $ git clone git://github.com/lopopolo/ice.git<br>
+        $ cd ice/ice<br>
+        $ python setup.py install<br>
+        $ gem install crxmake
+      </div>
+
+      <h2>Let's see it in action</h2>
+      <p>So we've installed Spoofer and we're ready to start sandboxing extensions. The repo
+      has an example of a nefarious extension, Coffee. Coffee is located at <span class="inlinecode">
+      $REPO_ROOT/extensions/coffee</span>.
+      </p>
+      <p>Let's wrap this baby up!
+      <img src="img/interactive-hot-coffee.png"/>
+      <p>It doesn't look like we did much in the way of limiting this extension. Let's see how bad it is.</p>
+      <img src="img/install-hot-coffee.png" />
+      <p>Egads, that's a lot of permissions! Oh well, let's run it anyway. click on that icon!</p>
+      <img src="img/nefarious.png" />
+      <img src="img/no-more-spoofer.png" />
+      <p>So hot coffee steals our history and uninstalls the spoofer extension. It's on to us and our
+      sandboxing ways. Time to whip out the big guns.</p>
+      <img src="img/interactive-iced-coffee.png" />
+      <img src="img/install-iced-coffee.png" />
+      <p>Ahh that looks a lot better. It can't possibly harm us now!</p>
+      <img src="img/no-evil.png" />
+      <p>But look, you say, it still is getting history data. Very good, I say to you; however, the data
+      it does get is faked using a state of the art method: randomly generated URLs.</p>
+
+      <h2>Issues</h2>
+      <ol>
+        <li>Extensions can still figure out if they're sandboxed. If an extension oringally has
+            the management permission, it can query chrome about installed extensions, including
+            itself. The wrapping process changes the identifier of the extension, we would report
+            the original extension as uninstalled.</li>
+        <li>We need to disallow access to <span class="inlinecode">eval</span>.</li>
+      </ol>
+
+      <h2>Authors</h2>
+      <ul>
+        <li><a href="https://github.com/lopopolo">Ryan Lopopolo</a></li>
+        <li><a href="https://github.com/esalazar">Edgar Salazar</a></li>
+        <li><a href="https://github.com/willcu">William Ung</a></li>
+      </ul>
+    </div>
+  </body>
+</html>
