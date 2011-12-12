@@ -106,6 +106,33 @@
       at all. That's a bad extension; this is a kitty.</p>
       <img src="http://img150.imageshack.us/img150/8185/officeravatar.jpg" />
 
+	  <a name="tech-specs"></a>
+	  <h2>Tech Specs</h2>
+	  <p>ICE is written in mostly in Python. It uses Ruby and crxmake to package extensions.</p>
+	  <h3>Unpacking</h3>
+	  <p>In order to unpack chrome extensions, we check if the extension is on the local machine or
+	  needs to be downloaded from the web. In the case that it is locally on the machine, then we
+	  just create a temporary folder and copy the contents of that extension there. If the extension
+	  needs to be retrieved online, then we make a request to a specific url with that requested
+	  extension id. The url service from Google will retrieve the crx file for that extension. We
+	  simply unpack it using ZipFile and send it to the temporary directory.</p>
+	  <h3>Packing</h3>
+	  <p>Packing is not as easy as unpacking, because we need to resign the extension. Because there is
+	  a large community of developers willing to help out those in need, we decided to use a ruby
+	  implementation of crxmake.</p>
+	  <h3>JSON/Manifest File</h3>
+	  <p>In order to modify the manifest file, we import a built-in json module. We load the json as a
+	  dictionary and start making changes to it. We use specific keywords to retrieve important objects
+	  from the manifest file, such as permissions.</p>
+	  <h3>Getting Specific Files</h3>
+	  <p>We needed a way to retrieve all javascript and html files to sandbox, so instead of just looking
+	  at the content files declared in the manifest file, we need to search the entire directory tree of
+	  the extension for those specific files. We walk the directory tree and return a list of relative
+	  paths to any file with a specific ending extension.</p>
+	  <h3>Interactive Interface</h3>
+	  <p>The interactive shell interface is just a simple loop that asks a series of questions based on
+	  the manifest file. The loop will break to the next question as soon as you answer it.</p>
+	  
       <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
