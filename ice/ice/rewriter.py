@@ -10,6 +10,7 @@
 # TODO: disallow eval
 
 # safe pystdlib imports
+import json
 import os.path
 import sys
 
@@ -46,6 +47,25 @@ permsToModulesMap["geolocation"] = "geolocation"
 
 # a list of all js files we have processed already
 processedFiles = []
+
+def setIcedCoffee(eID, manifest):
+    obj = """{ id : "%s",
+    name : %s,
+    description : %s,
+    version : %s,
+    mayDisable : true,
+    enabled : true,
+    isApp : false,
+    offlineEnabled : %s,
+    optionsUrl : "",
+    permissions : %s,
+    hostPermissions : [] }""" % (eID,
+            json.dumps(manifest["name"]) if "name" in manifest else '""',
+            json.dumps(manifest["description"]) if "description" in manifest else '""',
+            json.dumps(manifest["version"]) if "version" in manifest else '""',
+            json.dumps(manifest["offline_enabled"]) if "offline_enabled" in manifest else json.dumps("false"),
+            json.dumps(manifest["permissions"]) if "permissions" in manifest else "[]")
+    wrappers.iced_coffee = wrappers.iced_coffee % (obj)
 
 def rewriteJs(sourceFiles, perms):
     for js in sourceFiles:

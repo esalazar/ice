@@ -34,6 +34,9 @@ def ioloop():
     localFile = raw_input("Local file directory of Chrome Extension (if none press enter): ")
     packer.unpackExtension(eID, localFile)
 
+    # write spoofed extension info
+    rewriter.setIcedCoffee(eID, packer.getManifest(eID))
+
     #ask for user to choose permissions
     for permission in packer.getPermissions(eID):
         while 1:
