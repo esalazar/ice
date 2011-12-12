@@ -4,14 +4,17 @@ import os
 import traceback
 import sys
 
+# dictionary of all permissions we care about
 allPermissions = {"bookmarks": False,
                   "cookies": False,
                   "geolocation": False,
                   "history": False,
                   "management": False}
 
+# schemes allowed for extensions to access
 schemes = ['*', 'http', 'https', 'file', 'ftp']
 
+# run ICE
 def main():
     try:
         # get user input to set perms
@@ -28,6 +31,7 @@ def main():
     finally:
         packer.cleanup()
 
+# asks questions for how to deal with extension
 def ioloop():
     # ask for chrome id
     eID = raw_input("ID of Chrome Extension: ")
