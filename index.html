@@ -108,13 +108,13 @@
 
 	  <a name="tech-specs"></a>
 	  <h2>Tech Specs</h2>
-	  <p>ICE is written in mostly in Python. It uses Ruby and <a href="https://github.com/Constellation/crxmake">crxmake</a>
+	  <p>ICE is written in mostly Python. It uses Ruby and <a href="https://github.com/Constellation/crxmake">crxmake</a>
       to package extensions.</p>
 	  <h3>Unpacking</h3>
 	  <p>In order to unpack chrome extensions, we check if the extension is on the local machine or
-	  needs to be downloaded from the web. In the case that it is locally on the machine, then we
-	  just create a temporary folder and copy the contents of that extension there. If the extension
-	  needs to be retrieved online, then we make a request to a specific url with that requested
+	  needs to be downloaded from the chrome web store. In the case that it is locally on the machine, then we
+	  just create a temporary folder and copy the contents of that extension there so we can work on it.
+	  If the extension needs to be retrieved online, then we make a request to a specific url with that requested
 	  extension id. The url service from Google will retrieve the crx file for that extension. We
 	  simply unpack it using ZipFile and send it to the temporary directory.</p>
 	  <h3>Packing</h3>
