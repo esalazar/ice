@@ -60,8 +60,8 @@
       <p>The process of sandboxing an extension involves:
         <ol>
           <li>Asking the user to decide which permissions the extension should have</li>
-          <li>Rewriting html and js source files to point all chrome.* API calls to
-              wrapped versions.</li>
+          <li>Rewriting html and js source files to point all <span class="inlinecode">chrome.*</span>
+          API calls to wrapped versions.</li>
           <li>When the extension runs, the wrapped chrome APIs delegate to the Spoofer
               extension by passing messages. Spoofer generates fake response data.</li>
         </ol>    
@@ -121,7 +121,7 @@
 	  <p>Packing is not as easy as unpacking, because we need to resign the extension and use the
 	  <a href="http://code.google.com/chrome/extensions/crx.html">CRX package format</a>. Because there
 	  is a large community of developers willing to help out those in need, we decided to use a ruby
-	  implementation of crxmake.</p>
+	  gem called crxmake.</p>
 	  <h3>JSON/Manifest File</h3>
 	  <p>In order to modify the manifest file, we import a built-in json module. We load the json as a
 	  dictionary and start making changes to it. We use specific keywords to retrieve important objects
@@ -134,7 +134,14 @@
 	  <h3>Interactive Interface</h3>
 	  <p>The interactive shell interface is just a simple loop that asks a series of questions based on
 	  the manifest file. The loop will break from the current to the next question as soon as you answer it.</p>
-	  
+    <h3>JavaScript Rewriting</h3>
+    <p>The JavaScript rewriter uses slimit and the visitor pattern, similar to the way we did in
+    <a href="http://pdos.csail.mit.edu/6.858/2011/labs/lab6.html">lab 6</a>.</p>
+    <p>The <span class="inlinecode">chrome.*</span> API wrappers are included in every
+    JS snippet to ensure they are included in a script's local scope.</p>
+    <p>To limit the number of messages we pass to the spoofer, some APIs call the callback directly when
+    no spoofed results need to be generated (e.g., <span class="inlinecode">chrome.history.delete</span>).
+    
       <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
