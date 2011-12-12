@@ -51,6 +51,8 @@
 	
 	
 	function fakeLocation(){
+		/*Spoofs a geoposition object, and overrides the __proto__ of
+		the return object to match the geoposition object.*/
 		function cheap(obj){x=obj;}
 		navigator.geolocation.getCurrentPosition(cheap,cheap);
 		if (localStorage.getItem('position') == null){
@@ -70,13 +72,17 @@
 	
 	
 	function historySearch(query){
-		/*return arrays of history item*/
+		/*return arrays of spoof HistoryItems/
 		var n = Math.floor(Math.random()*10);
 		var newHistory = genHistoryItem(n); 
 		return newHistory;
 	}
 	
 	function genHistoryItem(n){
+		/*Generates an HistoryItem object, the url is choosen 
+		from the url variable, and a random string is concatenated
+		with some fixed probability. This is to give variation to 
+		the history*/
 		var historyItems = new Array();
 		var numVisits = 0;
 		for (var i=0; i <n; i++){
@@ -98,6 +104,7 @@
 	}
 
 	function randomString(chars){
+		/*Generates a random string based on the detribution of  the variable letters*/
 		var letters = '0123/456789Q/WERTYU/IOPASD//FGHJKL/ZXCVBN/M?/+=!qwertyuiopasdf/ghjklzxcvbnm';
 		var string = '';
 		for(var i=0;i<chars;i++){
@@ -107,6 +114,7 @@
 	}
 	
 	function genVisitItems(){
+		/*Creates an array of VisitItem objects*/
 		var trans = ["link", "typed", "auto_bookmark", "auto_subframe", "manual_subframe", "generated", "start_page", "form_submit", "reload", "keyword", "keyword_generated"];
 		var visitItems = new Array();
 		for(var i=0; i<Math.floor(Math.random()*20);i++){
@@ -121,7 +129,11 @@
 		return visitItems;
 	}
 	
-	/*function filter(query, historyItems){
+	/*
+	Function that would filter history items based on the content of the title
+	or including it with some random probability.
+	
+	function filter(query, historyItems){
 		var filtered = new Array();
 		for(var i=0; i<historyItems.length;i++){
 			if (str.indexOf(historyItems[i].title) != -1 || Math.random() < .05){
@@ -133,6 +145,7 @@
 	
 	
 	function genRootNode(){
+		/*Creates a spoofed root node*/
 		var bookmark = new Object();
 		bookmark.id = '0';
 		bookmark.dateAdded = new Date().getTime();
@@ -142,6 +155,7 @@
 	
 	
 	function genBookmarkTreeNodeURL(parentId){
+		/*Generates a bookmark object*/
 		id = parseInt(localStorage.bookmarkid);
 		if (id==null){
 			id = -1;
@@ -162,6 +176,7 @@
 	}
 	
 	function genBookmarkTreeNodeDir(parentId){
+		/*Generates a bookmark directory*/
 		id = parseInt(localStorage.bookmarkid);
 		if (id==null){
 			id = -1;
@@ -176,6 +191,7 @@
 	}
 	
 	function genBookmarkArray(parentId, n){
+		/*Generates a bookmark array*/
 		var bookmarks = new Array();
 		for(var i = 0; i<n;i++){
 			bookmarks[i] = genBookmarkTreeNodeURL(parentId);
@@ -183,7 +199,9 @@
 		return bookmarks;
 	}
 	
+	
 	function genWarnings(){
+		/*Skeleton function for for chrome.management.getPermissionWarnings* api */
 		var warnings = new Array();
 		var potentialWarnings = new Array();
 		return warnings;
