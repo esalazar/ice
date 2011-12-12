@@ -1,7 +1,7 @@
 {
 	"name": "Data Spoofer",
 	"version": "1.42",
-	"description": "Data spoofer, spoof spoof spoooooof",
+	"description": "Used in conjunction with the Ice script, spoofs calls to chrome apis.",
 	"options_page": "options.html",
 	"background_page": "background.html",
 	"permissions": ["geolocation","unlimitedStorage"]
