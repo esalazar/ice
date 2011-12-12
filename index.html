@@ -108,8 +108,8 @@
 
 	  <a name="tech-specs"></a>
 	  <h2>Tech Specs</h2>
-    <p>ICE is written in mostly in Python. It uses Ruby and <a href="https://github.com/Constellation/crxmake">crxmake</a>
-    to package extensions.</p>
+	  <p>ICE is written in mostly in Python. It uses Ruby and <a href="https://github.com/Constellation/crxmake">crxmake</a>
+      to package extensions.</p>
 	  <h3>Unpacking</h3>
 	  <p>In order to unpack chrome extensions, we check if the extension is on the local machine or
 	  needs to be downloaded from the web. In the case that it is locally on the machine, then we
@@ -118,8 +118,9 @@
 	  extension id. The url service from Google will retrieve the crx file for that extension. We
 	  simply unpack it using ZipFile and send it to the temporary directory.</p>
 	  <h3>Packing</h3>
-	  <p>Packing is not as easy as unpacking, because we need to resign the extension. Because there is
-	  a large community of developers willing to help out those in need, we decided to use a ruby
+	  <p>Packing is not as easy as unpacking, because we need to resign the extension and use the
+	  <a href="http://code.google.com/chrome/extensions/crx.html">CRX package format</a>. Because there
+	  is a large community of developers willing to help out those in need, we decided to use a ruby
 	  implementation of crxmake.</p>
 	  <h3>JSON/Manifest File</h3>
 	  <p>In order to modify the manifest file, we import a built-in json module. We load the json as a
@@ -132,7 +133,7 @@
 	  paths to any file with a specific ending extension.</p>
 	  <h3>Interactive Interface</h3>
 	  <p>The interactive shell interface is just a simple loop that asks a series of questions based on
-	  the manifest file. The loop will break to the next question as soon as you answer it.</p>
+	  the manifest file. The loop will break from the current to the next question as soon as you answer it.</p>
 	  
       <a name="issues"></a>
       <h2>Issues</h2>
