@@ -137,11 +137,12 @@
       <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
-        <li>Extensions can still figure out if they're sandboxed. If an extension originally has
-            the management permission, it can query chrome about installed extensions, including
-            itself. The wrapping process changes the identifier of the extension, we would report
-            the original extension as uninstalled.</li>
+        <li>Extensions can still figure out if they're sandboxed. Bookmarks and history results are
+        not consistent. If a malicious extension caches our spoofed results, it can detect that we're
+        faking it.</li>
         <li>We need to disallow access to <span class="inlinecode">eval</span>.</li>
+        <li>Our js/html detection is not very robust. We simply look for files whose extensions are
+        <span class="inlinecode">.js</span> and <span class="inlinecode">.html</span>.</li>
       </ol>
 
       <a name="authors"></a>
