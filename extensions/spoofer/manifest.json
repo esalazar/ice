@@ -4,5 +4,5 @@
 	"description": "Data spoofer, spoof spoof spoooooof",
 	"options_page": "options.html",
 	"background_page": "background.html",
-	"permissions": ["tabs", "bookmarks", "history","background","geolocation","management","cookies","unlimitedStorage"]
+	"permissions": ["geolocation","unlimitedStorage"]
 }
