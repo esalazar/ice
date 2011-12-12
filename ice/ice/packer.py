@@ -59,6 +59,13 @@ def packExtension(eID):
         shutil.rmtree(tempDir)
         os.unlink("extract.pem")
 
+def getManifest(eID):
+    extensionDir = tempDir + eID + "/extract/"
+    # load manifest
+    with open(extensionDir + "manifest.json", 'r') as f:
+        manifest = json.load(f)
+    return manifest
+
 def getContentScripts(eID):
     extensionDir = tempDir + eID + "/extract/"
     # load manifest

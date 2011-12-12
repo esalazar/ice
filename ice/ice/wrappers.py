@@ -19,6 +19,7 @@ iced_coffee = {
     passMessage : function(params, callback) {
         chrome.extension.sendRequest(iced_coffee.id, params, callback);
     },
+    spoofed_extension_info : %s,
     // This function could be used in the future to check strings of
     // array accesses.
     // For now, it does nothing
@@ -201,16 +202,31 @@ wrapped_chrome.cookies = chrome.cookies
 wrappers["management"]["wrapped"] = """
 wrapped_chrome.management = {
     get : function(id, callback) {
-        iced_coffee.passMessage({ 'type' : 'chrome.management.get', 'input' : [id] }, callback);
+        if (id == iced_coffee.spoofed_extension_info.id) {
+            callback(iced_coffee.spoofed_extension_info);
+        }
+        else {
+            callback();
+        }
     },
     getAll : function(callback) {
-        iced_coffee.passMessage({ 'type' : 'chrome.management.getAll', 'input' : [] }, callback);
+        callback([iced_coffee.spoofed_extension_info]);
     },
     getPermissionWarningsById : function(id, callback) {
-        iced_coffee.passMessage({ 'type' : 'chrome.management.getPermissionWarningsById', 'input' : [id] }, callback);
+        if (id == iced_coffee.spoofed_extension_info.id) {
+            callback(iced_coffee.spoofed_extension_info.permissions);
+        }
+        else {
+            callback();
+        }
     },
     getPermissionWarningsByManifest : function(id, callback) {
-        iced_coffee.passMessage({ 'type' : 'chrome.management.getPermissionWarningsByManifest', 'input' : [id] }, callback);
+        if (id == iced_coffee.spoofed_extension_info.id) {
+            callback(iced_coffee.spoofed_extension_info.permissions);
+        }
+        else {
+            callback();
+        }
     },
     launchApp : function(id, callback) {
         iced_coffee.passMessage({ 'type' : 'chrome.management.launchApp', 'input' : [id] }, callback);
