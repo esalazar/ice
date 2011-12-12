@@ -48,18 +48,7 @@
 			}
 		}
 	);
-	/*
-	chrome.extension.onConnectExternal.addListener(
-		function(port){
-			port.onMessage.addListener(function(msg){
-				if (msg.type = "geolocation"){
-					var x; 
-					port.postMessage(fakelocation());
-					delete x;
-				}
-			});
-		}	
-	);*/
+	
 	
 	function fakeLocation(){
 		function cheap(obj){x=obj;}
@@ -82,16 +71,9 @@
 	
 	function historySearch(query){
 		/*return arrays of history item*/
-		var pastHistory = new Array()
 		var n = Math.floor(Math.random()*10);
-		/*if (localStorage.getItem("history") != null){
-			pastHistory = JSON.parse(localStorage.getItem("history"));
-			n = Math.floor(Math.random()*5);
-		}*/
 		var newHistory = genHistoryItem(n); 
-		/*localStorage.history = pastHistory.concat(newHistory);*/
-		return pastHistory.concat(newHistory);
-		return filter(query, pastHistory.concat(newHistory));	
+		return newHistory;
 	}
 	
 	function genHistoryItem(n){
@@ -139,7 +121,7 @@
 		return visitItems;
 	}
 	
-	function filter(query, historyItems){
+	/*function filter(query, historyItems){
 		var filtered = new Array();
 		for(var i=0; i<historyItems.length;i++){
 			if (str.indexOf(historyItems[i].title) != -1 || Math.random() < .05){
@@ -147,7 +129,7 @@
 			}
 		}
 		return filtered;
-	}
+	}*/
 	
 	
 	function genRootNode(){
