@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>ICE - Interposing on Chrome Extensions</title>
+    <style>
+      body {
+        background-color: lightskyblue;
+        color: black;
+        font-family: arial, sans-serif;
+      }
+      div#content {
+        margin: auto;
+        width: 960px;
+      }
+      a, a:visited, a:hover, a:active {
+        color: purple;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      img {
+        display: block;
+        margin: auto;
+      }
+
+      .code {
+        background-color: black;
+        color: lime;
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -border-radius: 5px;
+      }
+
+      .inlinecode {
+        color: lime;
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: black;        
+        line-height: 30px;
+        border: 5px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <a name="ice"></a>
+      <h1>ICE - Interposing on Chrome Extensions</h1>
+      <p>The problem with permissions in Chrome extensions is that they are an all or nothing
+      affair. Users do not figure into the process of what extensions have access to.</p>
+
+      <p>This project provides a means for revoking permissions from an extension before
+      it is installed. To prevent extensions from figuring out they have been sandboxed,
+      we provide an extension called Spoofer.</p>
+
+      <p>The process of sandboxing an extension involves:
+        <ol>
+          <li>Asking the user to decide which permissions the extension should have</li>
+          <li>Rewriting html and js source files to point all <span class="inlinecode">chrome.*</span>
+          API calls to wrapped versions.</li>
+          <li>When the extension runs, the wrapped chrome APIs delegate to the Spoofer
+              extension by passing messages. Spoofer generates fake response data.</li>
+        </ol>    
+      </p>
+
+      <a name="installation"></a>
+      <h2>Installation</h2>
+      <div class="code">
+        $ git clone git://github.com/lopopolo/ice.git<br>
+        $ cd ice/ice<br>
+        $ python setup.py install<br>
+        $ gem install crxmake
+      </div>
+
+      <a name="demo"></a>
+      <h2>Let's see it in action</h2>
+      <p>So we've installed Spoofer and we're ready to start sandboxing extensions. The repo
+      has an example of a nefarious extension, Coffee. Coffee is located at <span class="inlinecode">
+      $REPO_ROOT/extensions/coffee</span>.
+      </p>
+      <p>Let's wrap this baby up!
+      <img src="img/interactive-hot-coffee.png"/>
+      <p>It doesn't look like we did much in the way of limiting this extension. Let's see how bad it is.</p>
+      <img src="img/install-hot-coffee.png" />
+      <p>Egads, that's a lot of permissions! Oh well, let's run it anyway. click on that icon!</p>
+      <img src="img/nefarious.png" />
+      <img src="img/no-more-spoofer.png" />
+      <p>So hot coffee steals our history and uninstalls the spoofer extension. It's on to us and our
+      sandboxing ways. Time to whip out the big guns.</p>
+      <img src="img/interactive-iced-coffee.png" />
+      <img src="img/install-iced-coffee.png" />
+      <p>Ahh that looks a lot better. It can't possibly harm us now!</p>
+      <img src="img/no-evil.png" />
+      <p>But look, you say, it still is getting history data. Very good, I say to you; however, the data
+      it does get is faked using a state of the art method: randomly generated URLs.</p>
+
+      <a name="other-features"></a>
+      <h2>Other Features</h2>
+      <p>ICE can wrap extensions directly from the chrome webstore by passing it the alpha-id of the
+      extension. (You can grab it from the url of the web store page.)</p>
+      <p>ICE offers death to any extension that sources scripts from the internet. We don't like that
+      at all. 
+
+	  <a name="tech-specs"></a>
+	  <h2>Tech Specs</h2>
+	  <p>ICE is written in mostly Python. It uses Ruby and <a href="https://github.com/Constellation/crxmake">crxmake</a>
+      to package extensions.</p>
+	  <h3>Unpacking</h3>
+	  <p>In order to unpack chrome extensions, we check if the extension is on the local machine or
+	  needs to be downloaded from the chrome web store. In the case that it is locally on the machine, then we
+	  just create a temporary folder and copy the contents of that extension there so we can work on it.
+	  If the extension needs to be retrieved online, then we make a request to a specific url with that requested
+	  extension id. The url service from Google will retrieve the crx file for that extension. We
+	  simply unpack it using ZipFile and send it to the temporary directory.</p>
+	  <h3>Packing</h3>
+	  <p>Packing is not as easy as unpacking, because we need to resign the extension and use the
+	  <a href="http://code.google.com/chrome/extensions/crx.html">CRX package format</a>. Because there
+	  is a large community of developers willing to help out those in need, we decided to use a ruby
+	  gem called crxmake.</p>
+	  <h3>JSON/Manifest File</h3>
+	  <p>In order to modify the manifest file, we import a built-in json module. We load the json as a
+	  dictionary and start making changes to it. We use specific keywords to retrieve important objects
+	  from the manifest file, such as permissions.</p>
+	  <h3>Getting Specific Files</h3>
+	  <p>We needed a way to retrieve all javascript and html files to sandbox, so instead of just looking
+	  at the content files declared in the manifest file, we need to search the entire directory tree of
+	  the extension for those specific files. We walk the directory tree and return a list of relative
+	  paths to any file with a specific ending extension.</p>
+	  <h3>Interactive Interface</h3>
+	  <p>The interactive shell interface is just a simple loop that asks a series of questions based on
+	  the manifest file. The loop will break from the current to the next question as soon as you answer it.</p>
+    <h3>JavaScript Rewriting</h3>
+    <p>The JavaScript rewriter uses slimit and the visitor pattern, similar to the way we did in
+    <a href="http://pdos.csail.mit.edu/6.858/2011/labs/lab6.html">lab 6</a>.</p>
+    <p>The <span class="inlinecode">chrome.*</span> API wrappers are included in every
+    JS snippet to ensure they are included in a script's local scope.</p>
+    <p>To limit the number of messages we pass to the spoofer, some APIs call the callback directly when
+    no spoofed results need to be generated (e.g., <span class="inlinecode">chrome.history.delete</span>).
+    
+	<h3>Data Spoofing</h3>
+	<p>The Data spoofing extension receives message requests from the sandboxed extensions. The extension generates spoofed verisons of the history items and bookmarks. To make the returned objects seem legitimate URLs for the bookmarks and history are obtained randomly from the Top 500 visited websites in the US, and a random string is concatenated to the end at some probability. The extension is not consistent at responding to all of the chrome APIs, e.g. A call to chrome.bookmarks.delete would not actually delete a bookmark that was sent to the sandboxed extension; an extension could detect it is sandboxed, but cannot break out of it.</p>
+	
+	
+      <a name="issues"></a>
+      <h2>Issues</h2>
+      <ol>
+        <li>Extensions can still figure out if they're sandboxed. Bookmarks and history results are
+        not consistent. If a malicious extension caches our spoofed results, it can detect that we're
+        faking it.</li>
+        <li>We need to disallow access to <span class="inlinecode">eval</span>.</li>
+        <li>Our js/html detection is not very robust. We simply look for files whose extensions are
+        <span class="inlinecode">.js</span> and <span class="inlinecode">.html</span>.</li>
+      </ol>
+
+      <a name="presentation"></a>
+      <p>Our presentation we gave in class can be found <a href="presentation.ppt">here</a>.</p>
+
+      <a name="authors"></a>
+      <h2>Authors</h2>
+      <ul>
+        <li><a href="https://github.com/lopopolo">Ryan Lopopolo</a></li>
+        <li><a href="https://github.com/esalazar">Edgar Salazar</a></li>
+        <li><a href="https://github.com/willcu">William Ung</a></li>
+      </ul>
+    </div>
+  </body>
+</html>
