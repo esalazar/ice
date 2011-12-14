@@ -142,6 +142,10 @@
     <p>To limit the number of messages we pass to the spoofer, some APIs call the callback directly when
     no spoofed results need to be generated (e.g., <span class="inlinecode">chrome.history.delete</span>).
     
+	<h3>Data Spoofing</h3>
+	<p>The Data spoofing extension receives message requests from the sandboxed extensions. The extension generates spoofed verisons of the history items and bookmarks. To make the returned objects seem legitimate URLs for the bookmarks and history are obtained randomly from the Top 500 visited websites in the US, and a random string is concatenated to the end at some probability. The extension is not consistent at responding to all of the chrome APIs, e.g. A call to chrome.bookmarks.delete would not actually delete a bookmark that was sent to the sandboxed extension; an extension could detect it is sandboxed, but cannot break out of it.</p>
+	
+	
       <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
