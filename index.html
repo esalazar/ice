@@ -38,7 +38,7 @@
         font-family: monospace;
         font-size: 20px;
         font-weight: bold;
-        background-color: black;        
+        background-color: black;
         line-height: 30px;
         border: 5px;
       }
@@ -64,7 +64,7 @@
           API calls to wrapped versions.</li>
           <li>When the extension runs, the wrapped chrome APIs delegate to the Spoofer
               extension by passing messages. Spoofer generates fake response data.</li>
-        </ol>    
+        </ol>
       </p>
 
       <a name="installation"></a>
@@ -104,7 +104,7 @@
       extension. (You can grab it from the url of the web store page.)</p>
       <p>ICE offers death to any extension that sources scripts from the internet. We don't like that
       at all. That's a bad extension; this is a kitty.</p>
-      <img src="http://img150.imageshack.us/img150/8185/officeravatar.jpg" />
+      <img src="http://i.imgur.com/6F18Y.jpg" />
 
 	  <a name="tech-specs"></a>
 	  <h2>Tech Specs</h2>
@@ -141,11 +141,11 @@
     JS snippet to ensure they are included in a script's local scope.</p>
     <p>To limit the number of messages we pass to the spoofer, some APIs call the callback directly when
     no spoofed results need to be generated (e.g., <span class="inlinecode">chrome.history.delete</span>).
-    
+
 	<h3>Data Spoofing</h3>
 	<p>The Data spoofing extension receives message requests from the sandboxed extensions. The extension generates spoofed verisons of the history items and bookmarks. To make the returned objects seem legitimate URLs for the bookmarks and history are obtained randomly from the Top 500 visited websites in the US, and a random string is concatenated to the end at some probability. The extension is not consistent at responding to all of the chrome APIs, e.g. A call to chrome.bookmarks.delete would not actually delete a bookmark that was sent to the sandboxed extension; an extension could detect it is sandboxed, but cannot break out of it.</p>
-	
-	
+
+
       <a name="issues"></a>
       <h2>Issues</h2>
       <ol>
